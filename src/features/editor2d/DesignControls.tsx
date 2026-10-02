@@ -274,6 +274,67 @@ export function DesignControls() {
         </div>
       </div>
 
+      {/* Brand Templates / Presets */}
+      <div className="controls-section">
+        <h4 className="controls-section-title">Brand Templates</h4>
+        <div className="preset-chips">
+          <button
+            className="preset-chip"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#0F172A');
+              setSectionBaseColor('frame', '#334155');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'APEX AI',
+                fontFamily: 'Montserrat',
+                fontSizePt: 54,
+                fill: '#00E5FF',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+            title="Sleek midnight blue AI showcase with cyan accents"
+          >
+            ⚡ Apex AI
+          </button>
+          <button
+            className="preset-chip"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#EA580C');
+              setSectionBaseColor('frame', '#E2E8F0');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'SUMMER FEST',
+                fontFamily: 'Bebas Neue',
+                fontSizePt: 64,
+                fill: '#FFFFFF',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+            title="Energetic orange festival booth with bold lettering"
+          >
+            🔥 Festival
+          </button>
+          <button
+            className="preset-chip"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#18181B');
+              setSectionBaseColor('frame', '#DC2626');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'VELOCITY GT',
+                fontFamily: 'Oswald',
+                fontSizePt: 58,
+                fill: '#DC2626',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+            title="Matte black motorsport setup with racing red text"
+          >
+            🏁 Motorsport
+          </button>
+        </div>
+      </div>
+
       {/* Selected layer properties */}
       {selectedLayer && (
         <div className="controls-section">
@@ -343,6 +404,62 @@ export function DesignControls() {
                     updateLayer(sectionId, selectedLayer.id, { fill: e.target.value })
                   }
                 />
+              </div>
+
+              <div className="property-row">
+                <label>Align:</label>
+                <div className="align-buttons">
+                  {(['left', 'center', 'right'] as const).map((align) => (
+                    <button
+                      key={align}
+                      className={`align-button ${selectedLayer.align === align ? 'align-button-active' : ''}`}
+                      onClick={() =>
+                        updateLayer(sectionId, selectedLayer.id, { align })
+                      }
+                      title={`Align ${align}`}
+                    >
+                      {align === 'left' ? '⫷' : align === 'center' ? '⫸⫷' : '⫸'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="property-row">
+                <label htmlFor="text-opacity">Opacity:</label>
+                <input
+                  id="text-opacity"
+                  type="range"
+                  min="10"
+                  max="100"
+                  value={Math.round(selectedLayer.opacity * 100)}
+                  onChange={(e) =>
+                    updateLayer(sectionId, selectedLayer.id, {
+                      opacity: Number(e.target.value) / 100,
+                    })
+                  }
+                />
+                <span className="opacity-val">{Math.round(selectedLayer.opacity * 100)}%</span>
+              </div>
+            </div>
+          )}
+
+          {selectedLayer.kind === 'image' && (
+            <div className="layer-properties">
+              <div className="property-row">
+                <label htmlFor="image-opacity">Opacity:</label>
+                <input
+                  id="image-opacity"
+                  type="range"
+                  min="10"
+                  max="100"
+                  value={Math.round(selectedLayer.opacity * 100)}
+                  onChange={(e) =>
+                    updateLayer(sectionId, selectedLayer.id, {
+                      opacity: Number(e.target.value) / 100,
+                    })
+                  }
+                />
+                <span className="opacity-val">{Math.round(selectedLayer.opacity * 100)}%</span>
               </div>
             </div>
           )}

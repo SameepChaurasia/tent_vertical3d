@@ -241,6 +241,7 @@ body {
 .viewer-3d-container {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .viewer-3d-container canvas {
@@ -249,6 +250,116 @@ body {
 
 .viewer-3d-container canvas:active {
   cursor: grabbing;
+}
+
+/* ── 3D Viewer Floating Toolbar ── */
+
+.viewer-floating-toolbar {
+  position: absolute;
+  top: var(--space-3);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: rgba(18, 18, 28, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-full);
+  z-index: 10;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+}
+
+.viewer-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.viewer-tool-button {
+  padding: 4px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.viewer-tool-button:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.viewer-tool-button-active {
+  color: #000000;
+  background: var(--color-accent);
+  box-shadow: 0 0 10px rgba(245, 166, 35, 0.4);
+}
+
+.viewer-tool-button-active:hover {
+  background: #ffb74d;
+  color: #000000;
+}
+
+.viewer-tool-separator {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 3px;
+}
+
+.viewer-tool-select {
+  padding: 3px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  outline: none;
+}
+
+.viewer-tool-select option {
+  background: #1a1a2e;
+  color: #ffffff;
+}
+
+.viewer-snapshot-button {
+  position: absolute;
+  bottom: var(--space-4);
+  right: var(--space-4);
+  padding: 7px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(18, 18, 28, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+  z-index: 10;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.viewer-snapshot-button:hover {
+  background: var(--color-accent);
+  color: #000000;
+  transform: translateY(-1px);
 }
 
 /* ── Viewer Loading & Error ── */
@@ -583,6 +694,72 @@ body {
   height: 28px;
   flex: 0 0 32px;
   cursor: pointer;
+}
+
+/* ── Brand Templates Presets ── */
+
+.preset-chips {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.preset-chip {
+  padding: 6px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: #ffffff;
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preset-chip:hover {
+  background: rgba(245, 166, 35, 0.15);
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.align-buttons {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.align-button {
+  padding: 4px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.align-button:hover {
+  color: #ffffff;
+  border-color: var(--color-text-secondary);
+}
+
+.align-button-active {
+  color: #000000;
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.opacity-val {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  min-width: 36px;
+  text-align: right;
+  font-family: monospace;
 }
 
 .layer-actions {

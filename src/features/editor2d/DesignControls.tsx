@@ -242,23 +242,36 @@ export function DesignControls() {
         </div>
       )}
 
-      {/* Base colour picker card */}
-      <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-3 shadow-sm">
-        <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
-          <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+      {/* Consolidated Fabric Color & Presets card */}
+      <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 space-y-2.5 shadow-sm">
+        <div className="flex items-center justify-between">
+          <h4 className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-200 uppercase">
             <span>🎨</span>
-            <span>Base Fabric Color</span>
+            <span>Fabric Color & Presets</span>
           </h4>
-          <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig?.baseColor ?? '#F5A623'}</span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig?.baseColor ?? '#F5A623'}</span>
+            <input
+              type="color"
+              value={sectionConfig?.baseColor ?? '#F5A623'}
+              onChange={(e) => setSectionBaseColor(sectionId, e.target.value)}
+              className="w-5 h-5 rounded cursor-pointer border border-slate-600 bg-transparent"
+              title="Custom Hex Picker"
+            />
+          </div>
         </div>
-        <div className="flex flex-wrap gap-2">
-          {colorSwatches.map((color) => {
+
+        {/* Compact color swatches row */}
+        <div className="flex items-center justify-between gap-1 pt-0.5">
+          {colorSwatches.slice(0, 9).map((color) => {
             const isSelected = sectionConfig?.baseColor?.toLowerCase() === color.toLowerCase();
             return (
               <button
                 key={color}
-                className={`w-7 h-7 rounded-md border-2 border-slate-700/80 cursor-pointer transition-all hover:scale-110 shadow-sm relative focus:outline-none ${
-                  isSelected ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-110 shadow-md' : ''
+                className={`w-6 h-6 rounded-md border-2 cursor-pointer transition-all ${
+                  isSelected
+                    ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-110 shadow-md'
+                    : 'border-slate-700/80 hover:scale-105'
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => setSectionBaseColor(sectionId, color)}
@@ -267,88 +280,66 @@ export function DesignControls() {
             );
           })}
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400 pt-1">
-          <label htmlFor="base-color-hex" className="font-semibold text-slate-300">Custom Hex:</label>
-          <input
-            id="base-color-hex"
-            type="text"
-            value={sectionConfig?.baseColor ?? '#F5A623'}
-            onChange={(e) => {
-              if (/^#[0-9a-fA-F]{3,8}$/.test(e.target.value)) {
-                setSectionBaseColor(sectionId, e.target.value);
-              }
-            }}
-            maxLength={9}
-            pattern="^#[0-9a-fA-F]{3,8}$"
-            className="w-28 px-2.5 py-1 text-xs font-mono bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
-          />
-        </div>
-      </div>
 
-      {/* Brand Templates / Presets card */}
-      <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-2.5 shadow-sm">
-        <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
-          <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
-            <span>✨</span>
-            <span>Brand Templates</span>
-          </h4>
-          <span className="text-[10px] text-amber-400 font-semibold">1-Click Styles</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <button
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-            onClick={() => {
-              setSectionBaseColor('canopy', '#0F172A');
-              setSectionBaseColor('frame', '#334155');
-              const layerId = addTextLayer('canopy', 'roof-front', {
-                content: 'APEX AI',
-                fontFamily: 'Montserrat',
-                fontSizePt: 54,
-                fill: '#00E5FF',
-                align: 'center',
-              });
-              selectLayer(layerId);
-            }}
-            title="Sleek midnight blue AI showcase with cyan accents"
-          >
-            <span>⚡</span> Apex AI
-          </button>
-          <button
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-            onClick={() => {
-              setSectionBaseColor('canopy', '#EA580C');
-              setSectionBaseColor('frame', '#E2E8F0');
-              const layerId = addTextLayer('canopy', 'roof-front', {
-                content: 'SUMMER FEST',
-                fontFamily: 'Bebas Neue',
-                fontSizePt: 64,
-                fill: '#FFFFFF',
-                align: 'center',
-              });
-              selectLayer(layerId);
-            }}
-            title="Energetic orange festival booth with bold lettering"
-          >
-            <span>🔥</span> Festival
-          </button>
-          <button
-            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
-            onClick={() => {
-              setSectionBaseColor('canopy', '#18181B');
-              setSectionBaseColor('frame', '#DC2626');
-              const layerId = addTextLayer('canopy', 'roof-front', {
-                content: 'VELOCITY GT',
-                fontFamily: 'Oswald',
-                fontSizePt: 58,
-                fill: '#DC2626',
-                align: 'center',
-              });
-              selectLayer(layerId);
-            }}
-            title="Matte black motorsport setup with racing red text"
-          >
-            <span>🏁</span> Motorsport
-          </button>
+        {/* 1-Click Brand Presets in same card */}
+        <div className="flex items-center gap-1.5 pt-2 border-t border-slate-800">
+          <span className="text-[10px] uppercase font-bold text-slate-400 shrink-0">Style:</span>
+          <div className="flex gap-1.5 flex-1">
+            <button
+              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
+              onClick={() => {
+                setSectionBaseColor('canopy', '#0F172A');
+                setSectionBaseColor('frame', '#334155');
+                const layerId = addTextLayer('canopy', 'roof-front', {
+                  content: 'APEX AI',
+                  fontFamily: 'Montserrat',
+                  fontSizePt: 54,
+                  fill: '#00E5FF',
+                  align: 'center',
+                });
+                selectLayer(layerId);
+              }}
+              title="Sleek midnight blue AI showcase with cyan accents"
+            >
+              ⚡ Apex
+            </button>
+            <button
+              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
+              onClick={() => {
+                setSectionBaseColor('canopy', '#EA580C');
+                setSectionBaseColor('frame', '#E2E8F0');
+                const layerId = addTextLayer('canopy', 'roof-front', {
+                  content: 'SUMMER FEST',
+                  fontFamily: 'Bebas Neue',
+                  fontSizePt: 64,
+                  fill: '#FFFFFF',
+                  align: 'center',
+                });
+                selectLayer(layerId);
+              }}
+              title="Energetic orange festival booth with bold lettering"
+            >
+              🔥 Fest
+            </button>
+            <button
+              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
+              onClick={() => {
+                setSectionBaseColor('canopy', '#18181B');
+                setSectionBaseColor('frame', '#DC2626');
+                const layerId = addTextLayer('canopy', 'roof-front', {
+                  content: 'VELOCITY GT',
+                  fontFamily: 'Oswald',
+                  fontSizePt: 58,
+                  fill: '#DC2626',
+                  align: 'center',
+                });
+                selectLayer(layerId);
+              }}
+              title="Matte black motorsport setup with racing red text"
+            >
+              🏁 Race
+            </button>
+          </div>
         </div>
       </div>
 

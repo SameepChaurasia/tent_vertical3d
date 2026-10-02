@@ -163,7 +163,7 @@ export function App() {
       </nav>
 
       {/* Main content */}
-      <main className="grid grid-cols-1 lg:grid-cols-[1fr_390px_330px] flex-1 overflow-hidden">
+      <main className="grid grid-cols-1 lg:grid-cols-[1fr_360px_330px] xl:grid-cols-[1fr_380px_340px] flex-1 overflow-hidden">
         {/* 3D Viewer */}
         <section
           className={`relative bg-gradient-to-b from-[#161a24] to-[#0c0e14] overflow-hidden ${
@@ -175,7 +175,7 @@ export function App() {
 
         {/* 2D Editor + Controls */}
         <section
-          className={`flex flex-col bg-slate-900/60 border-t lg:border-t-0 lg:border-l lg:border-r border-white/10 overflow-y-auto ${
+          className={`flex flex-col bg-slate-900/60 border-t lg:border-t-0 lg:border-l lg:border-r border-slate-800 overflow-y-auto overflow-x-hidden ${
             activeTab !== '2d' ? 'hidden lg:flex' : 'flex'
           }`}
         >
@@ -185,26 +185,27 @@ export function App() {
 
         {/* Options + Pricing */}
         <aside
-          className={`bg-slate-950/90 p-5 pb-28 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col gap-4 ${
+          className={`bg-slate-950/90 p-4 pb-28 overflow-y-auto overflow-x-hidden border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col gap-3.5 ${
             activeTab !== 'options' ? 'hidden lg:flex' : 'flex'
           }`}
         >
-          <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 flex flex-col gap-2 shadow-sm">
-            <div className="flex items-center gap-2.5 text-xs text-slate-200">
-              <span className="text-amber-400">⚡</span>
-              <span><strong>Production:</strong> 2 Business Days</span>
+          {/* Compact 2x2 Guarantees Grid */}
+          <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] text-slate-200 shadow-sm">
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-amber-400 text-xs">⚡</span>
+              <span>2-Day Prod.</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-200">
-              <span className="text-amber-400">🚚</span>
-              <span><strong>Delivery:</strong> 5–7 Days Nationwide</span>
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-amber-400 text-xs">🚚</span>
+              <span>5–7d Delivery</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-200">
-              <span className="text-amber-400">🏷️</span>
-              <span><strong>Wholesale:</strong> Volume Tier Pricing</span>
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-amber-400 text-xs">🏷️</span>
+              <span>Tier Pricing</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-200">
-              <span className="text-amber-400">✨</span>
-              <span><strong>No Minimums:</strong> Free Digital Proofs</span>
+            <div className="flex items-center gap-1.5 truncate">
+              <span className="text-amber-400 text-xs">✨</span>
+              <span>Free Proofs</span>
             </div>
           </div>
 

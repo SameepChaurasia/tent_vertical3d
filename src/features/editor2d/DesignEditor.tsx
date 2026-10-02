@@ -11,8 +11,8 @@ import {
 } from '../configurator/configurator.store';
 import type { ImageLayer, AssetEntry } from '../../domain/schemas';
 
-const EDITOR_WIDTH = 340;
-const EDITOR_HEIGHT = 340;
+const EDITOR_WIDTH = 300;
+const EDITOR_HEIGHT = 300;
 
 interface EditorImageProps {
   layer: ImageLayer;

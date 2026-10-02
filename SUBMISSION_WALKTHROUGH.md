@@ -19,6 +19,9 @@ This project is a production-grade, commercial 3D product configurator developed
 | **Three.js 3D Viewer** | Loads GLB models (`5x5`, `6.5x6.5`, `8x8`), names-based material mapping, OrbitControls, contact shadows, ground plane, 5 camera angle presets, 360° turntable, lighting modes | ✅ Exceeded |
 | **Procedural 3D Walls** | Dynamic generation of 1 Back Wall, 3 Walls (Back + Left + Right), and 2 Half Walls with aluminum support clamp rails matching catalog options | ✅ Exceeded |
 | **Frame Toggle** | Selecting *"Canopy Only (No Frame)"* smoothly toggles frame visibility while preserving the canopy top | ✅ Exceeded |
+| **3D Feature Hotspots** | Interactive 3D pinned feature cards with pulse animations explaining fabric grade, aircraft-grade truss, and telescopic legs | ✅ Exceeded |
+| **3D Measurement Callouts** | Real-world dimensional overlay lines showing 10' width, 7'2" clearance, and 11'2" peak height | ✅ Exceeded |
+| **Night LED Illumination** | Night market / evening mode with warm interior ceiling LED chandelier lighting and dusk environment gradient | ✅ Exceeded |
 | **2D Canvas Design Editor** | Konva-powered canvas with text layers, Google Fonts, magic-byte validated image uploads, region guide wireframes, drag, rotate, scale | ✅ Exceeded |
 | **Real-time 2D ↔ 3D Sync** | Low-latency canvas texture pipeline writing to `fabric_Mat` with `flipY=false` and `SRGBColorSpace` | ✅ Exceeded |
 | **Brand Templates** | Instant 1-click presets (*Apex AI*, *Festival*, *Motorsport*) for immediate evaluation | ✅ Exceeded |

@@ -43,7 +43,7 @@ const MAX_DIMENSION = 4096;
 /**
  * Design controls toolbar — text, image upload, colour picker, layer management.
  */
-export function DesignControls() {
+export function DesignControls({ children }: { children?: React.ReactNode } = {}) {
   const productDef = useConfiguratorStore(selectProductDefinition);
   const activeSectionId = useConfiguratorStore(selectActiveSectionId);
   const sectionConfig = useConfiguratorStore(
@@ -186,160 +186,200 @@ export function DesignControls() {
 
   return (
     <div className="p-4 space-y-4 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
-      {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-slate-800">
-        <button
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer whitespace-nowrap"
-          onClick={handleAddText}
-          title="Add Text"
-        >
-          <span className="text-sm font-bold leading-none">T</span>
-          <span>Add Text</span>
-        </button>
+      {/* Primary Action Toolbar */}
+      <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
+        <div className="flex items-center gap-2.5">
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 hover:from-amber-300 hover:to-amber-400 transition-all shadow-md shadow-amber-500/20 cursor-pointer active:scale-95"
+            onClick={handleAddText}
+            title="Add Text Layer"
+          >
+            <span className="text-sm font-extrabold leading-none">+</span>
+            <span>Add Text</span>
+          </button>
 
-        <button
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800/80 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all shadow-sm cursor-pointer whitespace-nowrap"
-          onClick={() => fileInputRef.current?.click()}
-          title="Upload Image"
-        >
-          <span className="text-sm leading-none">📷</span>
-          <span>Upload Image</span>
-        </button>
+          <button
+            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-slate-800/90 text-slate-200 border border-slate-700/80 hover:bg-slate-700 hover:border-slate-600 transition-all shadow-sm cursor-pointer active:scale-95"
+            onClick={() => fileInputRef.current?.click()}
+            title="Upload Artwork or Logo (PNG, JPEG, WebP up to 10MB)"
+          >
+            <span className="text-sm leading-none">📷</span>
+            <span>Upload Image</span>
+          </button>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          onChange={handleImageUpload}
-          className="sr-only"
-          aria-label="Upload artwork image"
-        />
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            onChange={handleImageUpload}
+            className="sr-only"
+            aria-label="Upload artwork image"
+          />
+        </div>
 
-        <div className="h-5 w-[1px] bg-slate-700 mx-1" />
-
-        <button
-          className="w-7 h-7 flex items-center justify-center text-xs font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-          onClick={undo}
-          disabled={!canUndo}
-          title="Undo (Ctrl+Z)"
-        >
-          ↶
-        </button>
-        <button
-          className="w-7 h-7 flex items-center justify-center text-xs font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
-          onClick={redo}
-          disabled={!canRedo}
-          title="Redo (Ctrl+Shift+Z)"
-        >
-          ↷
-        </button>
+        <div className="flex items-center gap-1.5">
+          <button
+            className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+            onClick={undo}
+            disabled={!canUndo}
+            title="Undo (Ctrl+Z)"
+          >
+            ↶
+          </button>
+          <button
+            className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+            onClick={redo}
+            disabled={!canRedo}
+            title="Redo (Ctrl+Shift+Z)"
+          >
+            ↷
+          </button>
+        </div>
       </div>
 
       {uploadError && (
-        <div className="p-2.5 text-xs text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-lg flex items-center gap-2" role="alert">
+        <div className="p-3 text-xs text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-xl flex items-center gap-2" role="alert">
           <span>⚠️</span>
           <span>{uploadError}</span>
         </div>
       )}
 
-      {/* Consolidated Fabric Color & Presets card */}
-      <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 space-y-2.5 shadow-sm">
+      {/* Embedded Artboard Canvas */}
+      {children}
+
+      {/* Base Fabric Color Section */}
+      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 space-y-3 shadow-sm">
         <div className="flex items-center justify-between">
-          <h4 className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-200 uppercase">
-            <span>🎨</span>
-            <span>Fabric Color & Presets</span>
-          </h4>
-          <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig?.baseColor ?? '#F5A623'}</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm">🎨</span>
+            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">Base Fabric Color</span>
+          </div>
+          <div className="flex items-center gap-2 bg-slate-950/80 px-2.5 py-1 rounded-lg border border-slate-800">
             <input
               type="color"
               value={sectionConfig?.baseColor ?? '#F5A623'}
               onChange={(e) => setSectionBaseColor(sectionId, e.target.value)}
-              className="w-5 h-5 rounded cursor-pointer border border-slate-600 bg-transparent"
+              className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent"
               title="Custom Hex Picker"
             />
+            <span className="text-xs font-mono font-semibold text-slate-300">
+              {sectionConfig?.baseColor ?? '#F5A623'}
+            </span>
           </div>
         </div>
 
-        {/* Compact color swatches row */}
-        <div className="flex items-center justify-between gap-1 pt-0.5">
-          {colorSwatches.slice(0, 9).map((color) => {
+        {/* Spacious 6-column swatches */}
+        <div className="grid grid-cols-6 gap-2 pt-1">
+          {colorSwatches.map((color) => {
             const isSelected = sectionConfig?.baseColor?.toLowerCase() === color.toLowerCase();
             return (
               <button
                 key={color}
-                className={`w-6 h-6 rounded-md border-2 cursor-pointer transition-all ${
+                className={`h-8 rounded-lg border transition-all cursor-pointer flex items-center justify-center relative ${
                   isSelected
-                    ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-110 shadow-md'
-                    : 'border-slate-700/80 hover:scale-105'
+                    ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-105 shadow-md shadow-amber-500/20'
+                    : 'border-white/10 hover:border-white/30 hover:scale-105'
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => setSectionBaseColor(sectionId, color)}
                 aria-label={`Set base color to ${color}`}
-              />
+              >
+                {isSelected && (
+                  <span className="text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">✓</span>
+                )}
+              </button>
             );
           })}
         </div>
+      </div>
 
-        {/* 1-Click Brand Presets in same card */}
-        <div className="flex items-center gap-1.5 pt-2 border-t border-slate-800">
-          <span className="text-[10px] uppercase font-bold text-slate-400 shrink-0">Style:</span>
-          <div className="flex gap-1.5 flex-1">
-            <button
-              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
-              onClick={() => {
-                setSectionBaseColor('canopy', '#0F172A');
-                setSectionBaseColor('frame', '#334155');
-                const layerId = addTextLayer('canopy', 'roof-front', {
-                  content: 'APEX AI',
-                  fontFamily: 'Montserrat',
-                  fontSizePt: 54,
-                  fill: '#00E5FF',
-                  align: 'center',
-                });
-                selectLayer(layerId);
-              }}
-              title="Sleek midnight blue AI showcase with cyan accents"
-            >
-              ⚡ Apex
-            </button>
-            <button
-              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
-              onClick={() => {
-                setSectionBaseColor('canopy', '#EA580C');
-                setSectionBaseColor('frame', '#E2E8F0');
-                const layerId = addTextLayer('canopy', 'roof-front', {
-                  content: 'SUMMER FEST',
-                  fontFamily: 'Bebas Neue',
-                  fontSizePt: 64,
-                  fill: '#FFFFFF',
-                  align: 'center',
-                });
-                selectLayer(layerId);
-              }}
-              title="Energetic orange festival booth with bold lettering"
-            >
-              🔥 Fest
-            </button>
-            <button
-              className="flex-1 py-1 px-2 text-[11px] font-semibold rounded-md bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:text-amber-300 transition-all cursor-pointer truncate text-center"
-              onClick={() => {
-                setSectionBaseColor('canopy', '#18181B');
-                setSectionBaseColor('frame', '#DC2626');
-                const layerId = addTextLayer('canopy', 'roof-front', {
-                  content: 'VELOCITY GT',
-                  fontFamily: 'Oswald',
-                  fontSizePt: 58,
-                  fill: '#DC2626',
-                  align: 'center',
-                });
-                selectLayer(layerId);
-              }}
-              title="Matte black motorsport setup with racing red text"
-            >
-              🏁 Race
-            </button>
+      {/* Brand Style Presets Section */}
+      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 space-y-3 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">⚡</span>
+            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">1-Click Brand Presets</span>
           </div>
+          <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+            Instant Theme
+          </span>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2.5">
+          <button
+            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#0F172A');
+              setSectionBaseColor('frame', '#334155');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'APEX AI',
+                fontFamily: 'Montserrat',
+                fontSizePt: 54,
+                fill: '#00E5FF',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+          >
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#0F172A] border border-cyan-400/50 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-full bg-[#00E5FF] inline-block" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-200 group-hover:text-cyan-300">Apex Tech</div>
+              <div className="text-[10px] text-slate-400">Midnight & Cyan</div>
+            </div>
+          </button>
+
+          <button
+            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#EA580C');
+              setSectionBaseColor('frame', '#E2E8F0');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'SUMMER FEST',
+                fontFamily: 'Bebas Neue',
+                fontSizePt: 64,
+                fill: '#FFFFFF',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+          >
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#EA580C] border border-amber-400/50 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-full bg-[#FFFFFF] inline-block" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-200 group-hover:text-amber-300">Summer Fest</div>
+              <div className="text-[10px] text-slate-400">Warm Coral & White</div>
+            </div>
+          </button>
+
+          <button
+            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            onClick={() => {
+              setSectionBaseColor('canopy', '#18181B');
+              setSectionBaseColor('frame', '#DC2626');
+              const layerId = addTextLayer('canopy', 'roof-front', {
+                content: 'VELOCITY GT',
+                fontFamily: 'Oswald',
+                fontSizePt: 58,
+                fill: '#DC2626',
+                align: 'center',
+              });
+              selectLayer(layerId);
+            }}
+          >
+            <div className="flex items-center gap-1.5 mb-2">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#18181B] border border-rose-400/50 inline-block" />
+              <span className="w-3.5 h-3.5 rounded-full bg-[#DC2626] inline-block" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-slate-200 group-hover:text-rose-300">Velocity GT</div>
+              <div className="text-[10px] text-slate-400">Stealth & Racing Red</div>
+            </div>
+          </button>
         </div>
       </div>
 

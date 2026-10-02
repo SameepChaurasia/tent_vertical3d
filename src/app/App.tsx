@@ -85,6 +85,9 @@ export function App() {
     }
   }, [configuration, productDef, currentQuote, designNotes]);
 
+  const [studioTab, setStudioTab] = useState<'editor' | 'options'>('editor');
+  const [viewMode, setViewMode] = useState<'studio' | 'split'>('studio');
+
   return (
     <div className={`flex flex-col h-screen overflow-hidden bg-slate-950 text-slate-100 font-sans ${isEmbed ? 'embed-mode' : ''}`}>
       {/* Header — hidden in embed mode */}
@@ -109,7 +112,36 @@ export function App() {
               LIVE 3D ENGINE
             </span>
           </div>
-          <div className="flex items-center gap-2.5">
+
+          <div className="flex items-center gap-3">
+            {/* Desktop View Mode Switcher */}
+            <div className="hidden lg:flex items-center p-1 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold">
+              <button
+                onClick={() => setViewMode('studio')}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'studio'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Spacious luxury studio mode with dedicated tabs"
+              >
+                <span>🔲</span>
+                <span>Studio View</span>
+              </button>
+              <button
+                onClick={() => setViewMode('split')}
+                className={`px-3 py-1 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
+                  viewMode === 'split'
+                    ? 'bg-amber-400 text-slate-950 font-bold shadow-sm'
+                    : 'text-slate-400 hover:text-white'
+                }`}
+                title="Pro 3-column split view for wide screens"
+              >
+                <span>◫</span>
+                <span>3-Column Pro</span>
+              </button>
+            </div>
+
             <button
               className="px-3.5 py-1.5 text-xs font-bold text-slate-950 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 rounded-lg shadow-md shadow-amber-500/20 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               onClick={handleDownloadPdf}
@@ -163,7 +195,13 @@ export function App() {
       </nav>
 
       {/* Main content */}
-      <main className="grid grid-cols-1 lg:grid-cols-[1fr_360px_330px] xl:grid-cols-[1fr_380px_340px] flex-1 overflow-hidden">
+      <main
+        className={`grid grid-cols-1 flex-1 overflow-hidden ${
+          viewMode === 'studio'
+            ? 'lg:grid-cols-[1fr_560px] xl:grid-cols-[1fr_620px] 2xl:grid-cols-[1fr_680px]'
+            : 'lg:grid-cols-[1fr_420px_380px] xl:grid-cols-[1fr_440px_400px]'
+        }`}
+      >
         {/* 3D Viewer */}
         <section
           className={`relative bg-gradient-to-b from-[#161a24] to-[#0c0e14] overflow-hidden ${
@@ -173,48 +211,91 @@ export function App() {
           <ConfiguratorCanvas ref={viewerRef} />
         </section>
 
-        {/* 2D Editor + Controls */}
-        <section
-          className={`flex flex-col bg-slate-900/60 border-t lg:border-t-0 lg:border-l lg:border-r border-slate-800 overflow-y-auto overflow-x-hidden ${
-            activeTab !== '2d' ? 'hidden lg:flex' : 'flex'
-          }`}
-        >
-          <DesignControls />
-          <DesignEditor />
-        </section>
+        {/* Studio Mode Workspace (When viewMode === 'studio') */}
+        {viewMode === 'studio' ? (
+          <aside className="hidden lg:flex flex-col bg-slate-950/95 border-l border-slate-800 overflow-hidden relative">
+            {/* Studio Workspace Header Tabs */}
+            <div className="shrink-0 p-4 pb-3 bg-slate-950 border-b border-slate-800/80">
+              <div className="flex bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => setStudioTab('editor')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    studioTab === 'editor'
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                  }`}
+                >
+                  <span className="text-sm">🎨</span>
+                  <span>2D Graphic Design Studio</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setStudioTab('options')}
+                  className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    studioTab === 'options'
+                      ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/40'
+                  }`}
+                >
+                  <span className="text-sm">⚙️</span>
+                  <span>Product Options & Quote</span>
+                </button>
+              </div>
+            </div>
 
-        {/* Options + Pricing */}
-        <aside
-          className={`bg-slate-950/90 p-4 pb-28 overflow-y-auto overflow-x-hidden border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col gap-3.5 ${
-            activeTab !== 'options' ? 'hidden lg:flex' : 'flex'
-          }`}
-        >
-          {/* Compact 2x2 Guarantees Grid */}
-          <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-2.5 grid grid-cols-2 gap-2 text-[11px] text-slate-200 shadow-sm">
-            <div className="flex items-center gap-1.5 truncate">
-              <span className="text-amber-400 text-xs">⚡</span>
-              <span>2-Day Prod.</span>
+            {/* Studio Tab 1: 2D Editor */}
+            <div
+              className={`flex-1 overflow-y-auto p-5 pb-32 space-y-5 ${
+                studioTab === 'editor' ? 'block' : 'hidden'
+              }`}
+            >
+              <DesignControls>
+                <DesignEditor />
+              </DesignControls>
             </div>
-            <div className="flex items-center gap-1.5 truncate">
-              <span className="text-amber-400 text-xs">🚚</span>
-              <span>5–7d Delivery</span>
-            </div>
-            <div className="flex items-center gap-1.5 truncate">
-              <span className="text-amber-400 text-xs">🏷️</span>
-              <span>Tier Pricing</span>
-            </div>
-            <div className="flex items-center gap-1.5 truncate">
-              <span className="text-amber-400 text-xs">✨</span>
-              <span>Free Proofs</span>
-            </div>
-          </div>
 
-          <OptionsPanel />
-          <PricingPanel
-            pricingService={pricingService}
-            onQuoteReady={handleQuoteReady}
-          />
-        </aside>
+            {/* Studio Tab 2: Options + Pricing */}
+            <div
+              className={`flex-1 overflow-y-auto p-5 pb-32 space-y-5 ${
+                studioTab === 'options' ? 'block' : 'hidden'
+              }`}
+            >
+              <OptionsPanel />
+              <PricingPanel
+                pricingService={pricingService}
+                onQuoteReady={handleQuoteReady}
+              />
+            </div>
+          </aside>
+        ) : (
+          /* Split 3-Column Mode Workspace (When viewMode === 'split') */
+          <>
+            {/* 2D Editor + Controls */}
+            <section
+              className={`flex flex-col bg-slate-900/60 border-t lg:border-t-0 lg:border-l lg:border-r border-slate-800 overflow-y-auto p-4 pb-28 space-y-4 ${
+                activeTab !== '2d' ? 'hidden lg:flex' : 'flex'
+              }`}
+            >
+              <DesignControls>
+                <DesignEditor />
+              </DesignControls>
+            </section>
+
+            {/* Options + Pricing */}
+            <aside
+              className={`bg-slate-950/90 p-4 pb-28 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col gap-4 ${
+                activeTab !== 'options' ? 'hidden lg:flex' : 'flex'
+              }`}
+            >
+              <OptionsPanel />
+              <PricingPanel
+                pricingService={pricingService}
+                onQuoteReady={handleQuoteReady}
+              />
+            </aside>
+          </>
+        )}
       </main>
 
       {/* Checkout bar */}

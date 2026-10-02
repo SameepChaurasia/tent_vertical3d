@@ -47,7 +47,7 @@ export function OptionsPanel() {
   if (!productDef) return null;
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {/* Option Groups (Package, Side Walls, Half Walls) */}
       {productDef.optionGroups.map((group) => {
         /* Check visibility conditions */
@@ -66,29 +66,32 @@ export function OptionsPanel() {
         const isOpen = openSections[group.id] ?? true;
 
         const sectionMeta: Record<string, { icon: string; subtitle: string }> = {
-          'frame-type': { icon: '📦', subtitle: 'Kit & Hardware' },
-          'side-walls': { icon: '🧱', subtitle: 'Full Back/Side Walls' },
-          'half-walls': { icon: '🛡️', subtitle: 'Rail Banners' },
+          'frame-type': { icon: '📦', subtitle: 'Hardware & Fabric Kit' },
+          'side-walls': { icon: '🧱', subtitle: 'Full Enclosure Backdrop' },
+          'half-walls': { icon: '🛡️', subtitle: 'Rail Mounted Banners' },
         };
 
         const meta = sectionMeta[group.id] ?? { icon: '⚙️', subtitle: 'Options' };
 
         return (
-          <div key={group.id} className="bg-slate-900/80 border border-slate-700/80 rounded-xl overflow-hidden shadow-sm transition-all">
+          <div key={group.id} className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-sm transition-all">
             {/* Header Accordion Bar */}
             <button
               type="button"
-              className="w-full flex items-center justify-between p-3 bg-slate-900/90 hover:bg-slate-800/80 transition-colors cursor-pointer text-left select-none"
+              className="w-full flex items-center justify-between p-3.5 bg-slate-900/90 hover:bg-slate-850 transition-colors cursor-pointer text-left select-none"
               onClick={() => toggleSection(group.id)}
               aria-expanded={isOpen}
             >
-              <div className="flex items-center gap-2">
-                <span className="text-sm">{meta.icon}</span>
-                <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">{group.label}</span>
+              <div className="flex items-center gap-2.5">
+                <span className="text-base">{meta.icon}</span>
+                <div className="flex flex-col">
+                  <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">{group.label}</span>
+                  <span className="text-[10px] text-slate-400">{meta.subtitle}</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 {!isOpen && selectedChoice && (
-                  <span className="text-[10px] font-medium text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded truncate max-w-[130px]">
+                  <span className="text-[11px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full truncate max-w-[150px]">
                     {selectedChoice.label.split(':')[0]}
                   </span>
                 )}
@@ -100,26 +103,51 @@ export function OptionsPanel() {
 
             {/* Expandable Choices Body */}
             {isOpen && (
-              <div className="p-3 pt-1 border-t border-slate-800/80 grid grid-cols-1 gap-1.5 animate-fadeIn">
+              <div
+                className={`p-3.5 pt-2 border-t border-slate-800/80 grid gap-2.5 animate-fadeIn ${
+                  group.id === 'frame-type'
+                    ? 'grid-cols-1 sm:grid-cols-2'
+                    : group.id === 'half-walls'
+                    ? 'grid-cols-1 sm:grid-cols-3'
+                    : 'grid-cols-1 sm:grid-cols-2'
+                }`}
+              >
                 {group.choices.map((choice) => {
                   const isSelected = selectedChoiceId === choice.id;
                   const priceTag = OPTION_PRICE_TAGS[choice.id];
+                  /* In side-walls, let 'None' span full width on sm screens if odd */
+                  const isFullWidthSpan = group.id === 'side-walls' && choice.id === 'none';
+
                   return (
                     <button
                       key={choice.id}
-                      className={`flex items-center justify-between p-2.5 rounded-lg text-xs font-medium text-left border transition-all duration-150 cursor-pointer ${
+                      className={`flex flex-col justify-between p-3.5 rounded-xl text-left border transition-all duration-150 cursor-pointer ${
+                        isFullWidthSpan ? 'sm:col-span-2' : ''
+                      } ${
                         isSelected
-                          ? 'bg-amber-500/15 border-amber-400 text-amber-200 font-semibold shadow-sm ring-1 ring-amber-400/25'
-                          : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800 hover:border-slate-600 hover:text-white'
+                          ? 'bg-gradient-to-br from-amber-500/20 via-amber-500/10 to-transparent border-amber-500/60 text-amber-100 font-semibold shadow-md shadow-amber-500/10 ring-1 ring-amber-400/30'
+                          : 'bg-slate-950/60 border-slate-800/90 text-slate-300 hover:bg-slate-850 hover:border-slate-700 hover:text-white'
                       }`}
                       onClick={() => setOption(group.id, choice.id)}
                       aria-pressed={isSelected}
                     >
-                      <span className="pr-2 leading-snug">{choice.label}</span>
-                      <div className="flex items-center gap-2 shrink-0">
-                        {priceTag && (
+                      <div className="flex items-start justify-between gap-2 mb-2 w-full">
+                        <span className="text-xs font-semibold leading-snug">{choice.label}</span>
+                        <span
+                          className={`w-4 h-4 rounded-full border shrink-0 flex items-center justify-center transition-all ${
+                            isSelected
+                              ? 'border-amber-400 bg-amber-400 shadow-[0_0_8px_#f59e0b]'
+                              : 'border-slate-600 bg-slate-800'
+                          }`}
+                        >
+                          {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-slate-950" />}
+                        </span>
+                      </div>
+
+                      {priceTag && (
+                        <div className="flex items-center justify-end w-full">
                           <span
-                            className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${
+                            className={`text-[11px] font-mono font-medium px-2 py-0.5 rounded-md border ${
                               priceTag === 'Included'
                                 ? 'text-slate-400 bg-white/5 border-white/10'
                                 : priceTag.startsWith('-')
@@ -129,15 +157,8 @@ export function OptionsPanel() {
                           >
                             {priceTag}
                           </span>
-                        )}
-                        <span
-                          className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
-                            isSelected ? 'border-amber-400 bg-amber-400 shadow-[0_0_8px_#f59e0b]' : 'border-slate-600 bg-slate-800'
-                          }`}
-                        >
-                          {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-slate-950" />}
-                        </span>
-                      </div>
+                        </div>
+                      )}
                     </button>
                   );
                 })}
@@ -149,32 +170,34 @@ export function OptionsPanel() {
 
       {/* 3D CAD Model Dimensions — Sleek 3-column horizontal segmented tile row */}
       {Object.keys(productDef.models).length > 1 && (
-        <div className="bg-slate-900/80 border border-slate-700/80 rounded-xl p-3 space-y-2 shadow-sm">
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 space-y-2.5 shadow-sm">
           <div className="flex items-center justify-between">
-            <h3 className="flex items-center gap-1.5 text-xs font-bold tracking-wider text-slate-200 uppercase">
+            <h3 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
               <span>📐</span>
               <span>3D Model Scale</span>
             </h3>
-            <span className="text-[10px] text-amber-400 font-mono font-semibold">Live CAD</span>
+            <span className="text-[10px] text-amber-400 font-mono font-semibold bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+              Live Mesh
+            </span>
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-2.5">
             {Object.entries(productDef.models).map(([modelSizeId, modelData]) => {
               const isSelected = currentSizeId === modelSizeId;
               const shortLabel = modelData.label.replace(' Canopy', '');
               return (
                 <button
                   key={modelSizeId}
-                  className={`py-2 px-1 text-center rounded-lg border transition-all cursor-pointer flex flex-col items-center justify-center ${
+                  className={`py-2.5 px-2 text-center rounded-xl border transition-all cursor-pointer flex flex-col items-center justify-center ${
                     isSelected
-                      ? 'bg-amber-500/15 border-amber-400 text-amber-200 font-bold shadow-sm ring-1 ring-amber-400/25'
-                      : 'bg-slate-950/60 border-slate-800 text-slate-300 hover:bg-slate-800 hover:border-slate-600 hover:text-white'
+                      ? 'bg-amber-500/15 border-amber-500/50 text-amber-200 font-bold shadow-sm'
+                      : 'bg-slate-950/50 border-slate-800/80 text-slate-300 hover:bg-slate-800/50 hover:border-slate-700 hover:text-white'
                   }`}
                   onClick={() => setSize(modelSizeId)}
                   aria-pressed={isSelected}
                   title={`${modelData.label} (${modelData.physicalWidthInches}"×${modelData.physicalDepthInches}")`}
                 >
                   <span className="text-xs">{shortLabel}</span>
-                  <span className="text-[9px] font-mono text-slate-400">
+                  <span className="text-[10px] font-mono text-slate-400">
                     {modelData.physicalWidthInches}"×{modelData.physicalDepthInches}"
                   </span>
                 </button>

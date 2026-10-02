@@ -86,7 +86,7 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
   }, [fetchQuote]);
 
   return (
-    <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-4 shadow-sm space-y-3">
+    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 shadow-sm space-y-3">
       <div className="flex items-center justify-between pb-2 border-b border-slate-800">
         <h3 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
           <span>💳</span>

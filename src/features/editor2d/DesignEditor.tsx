@@ -11,8 +11,8 @@ import {
 } from '../configurator/configurator.store';
 import type { ImageLayer, AssetEntry } from '../../domain/schemas';
 
-const EDITOR_WIDTH = 300;
-const EDITOR_HEIGHT = 300;
+const EDITOR_WIDTH = 320;
+const EDITOR_HEIGHT = 320;
 
 interface EditorImageProps {
   layer: ImageLayer;
@@ -192,7 +192,7 @@ export function DesignEditor() {
   }
 
   return (
-    <div className="flex flex-col p-4 gap-3">
+    <div className="flex flex-col gap-3 my-1">
       {/* Surface switcher — ONLY shown when multiple surfaces (walls) are selected */}
       {visibleSections.length > 1 && (
         <div className="flex flex-col gap-1.5 p-2 bg-slate-900/80 border border-slate-700 rounded-xl">
@@ -221,26 +221,26 @@ export function DesignEditor() {
       )}
 
       {/* Artboard Card */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 shadow-md">
-        <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 shadow-lg">
+        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
             <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">
               {activeSectionId === 'canopy' ? '⛺ ROOF & VALANCE CANVAS' : '🧱 PRINT SURFACE CANVAS'}
             </span>
           </div>
-          <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 rounded">
+          <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/25 px-2.5 py-0.5 rounded-full">
             2048 × 2048 MASTER
           </span>
         </div>
-        <div className="editor-2d-canvas-wrapper">
-          <Stage
-            ref={stageRef}
-            width={EDITOR_WIDTH}
-            height={EDITOR_HEIGHT}
-            onClick={handleStageClick}
-            style={{ borderRadius: '6px', overflow: 'hidden' }}
-          >
+        <div className="editor-2d-canvas-wrapper flex justify-center items-center py-1">
+          <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-700/60 bg-slate-950">
+            <Stage
+              ref={stageRef}
+              width={EDITOR_WIDTH}
+              height={EDITOR_HEIGHT}
+              onClick={handleStageClick}
+            >
             <Layer>
               {/* Base colour fill */}
               <Rect
@@ -345,8 +345,9 @@ export function DesignEditor() {
             />
           </Layer>
         </Stage>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }

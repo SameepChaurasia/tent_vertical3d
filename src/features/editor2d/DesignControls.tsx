@@ -547,6 +547,95 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
             </div>
           )}
 
+          {/* Quick Face Alignment / Snapping */}
+          <div className="pt-2 border-t border-white/[0.06] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-300">Snap to Tent Panel:</span>
+              <span className="text-[10px] text-amber-400 font-mono">1-Click Precision</span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button
+                type="button"
+                className="px-2.5 py-2 text-[11px] font-bold bg-[#0a0d14] hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-400/50 border border-white/[0.08] rounded-xl transition-all text-slate-300 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                onClick={() =>
+                  updateLayer(sectionId, selectedLayer.id, {
+                    normalizedX: 0.5,
+                    normalizedY: 0.72,
+                    rotationDegrees: 0,
+                  })
+                }
+                title="Center directly on the Front Roof face (Front 3D camera view)"
+              >
+                <span>🎯</span>
+                <span>Front Face</span>
+              </button>
+
+              <button
+                type="button"
+                className="px-2.5 py-2 text-[11px] font-bold bg-[#0a0d14] hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-400/50 border border-white/[0.08] rounded-xl transition-all text-slate-300 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                onClick={() =>
+                  updateLayer(sectionId, selectedLayer.id, {
+                    normalizedX: 0.5,
+                    normalizedY: 0.925,
+                    rotationDegrees: 0,
+                  })
+                }
+                title="Align to Front Valance hanging skirt"
+              >
+                <span>📐</span>
+                <span>Valance</span>
+              </button>
+
+              <button
+                type="button"
+                className="px-2.5 py-2 text-[11px] font-bold bg-[#0a0d14] hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-400/50 border border-white/[0.08] rounded-xl transition-all text-slate-300 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                onClick={() =>
+                  updateLayer(sectionId, selectedLayer.id, {
+                    normalizedX: 0.5,
+                    normalizedY: 0.28,
+                    rotationDegrees: 180,
+                  })
+                }
+                title="Align to Back Roof face"
+              >
+                <span>🔄</span>
+                <span>Back Face</span>
+              </button>
+
+              <button
+                type="button"
+                className="px-2.5 py-2 text-[11px] font-bold bg-[#0a0d14] hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-400/50 border border-white/[0.08] rounded-xl transition-all text-slate-300 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                onClick={() =>
+                  updateLayer(sectionId, selectedLayer.id, {
+                    normalizedX: 0.28,
+                    normalizedY: 0.5,
+                    rotationDegrees: -90,
+                  })
+                }
+                title="Align to Left Roof face"
+              >
+                <span>◀</span>
+                <span>Left Face</span>
+              </button>
+
+              <button
+                type="button"
+                className="px-2.5 py-2 text-[11px] font-bold bg-[#0a0d14] hover:bg-amber-500/20 hover:text-amber-300 hover:border-amber-400/50 border border-white/[0.08] rounded-xl transition-all text-slate-300 cursor-pointer flex items-center justify-center gap-1.5 shadow-sm"
+                onClick={() =>
+                  updateLayer(sectionId, selectedLayer.id, {
+                    normalizedX: 0.72,
+                    normalizedY: 0.5,
+                    rotationDegrees: 90,
+                  })
+                }
+                title="Align to Right Roof face"
+              >
+                <span>▶</span>
+                <span>Right Face</span>
+              </button>
+            </div>
+          </div>
+
           <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
             <button
               className="flex-1 px-4 py-2.5 text-xs font-bold rounded-xl bg-rose-500/15 text-rose-300 border border-rose-500/40 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center active:scale-95 shadow-sm"

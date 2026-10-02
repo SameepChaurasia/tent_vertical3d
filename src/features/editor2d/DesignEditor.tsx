@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback, useMemo, useState } from 'react';
-import { Stage, Layer, Rect, Text, Transformer, Group, Image as KonvaImage } from 'react-konva';
+import { Stage, Layer, Rect, Text, Transformer, Group, Image as KonvaImage, Line, Circle } from 'react-konva';
 import type Konva from 'konva';
 import {
   useConfiguratorStore,
@@ -258,35 +258,118 @@ export function DesignEditor() {
                 listening={false}
               />
 
-            {/* Region guide lines */}
+            {/* Clear CAD region polygons with directional notations & areas */}
             {productDef.sections
               .find((s) => s.id === activeSectionId)
               ?.printRegions.map((region) => {
-                const points = region.uvPolygon.map((p) => [
+                const flatPoints = region.uvPolygon.flatMap((p) => [
                   p.u * EDITOR_WIDTH,
                   p.v * EDITOR_HEIGHT,
                 ]);
+
+                const avgX =
+                  (region.uvPolygon.reduce((acc, p) => acc + p.u, 0) / region.uvPolygon.length) *
+                  EDITOR_WIDTH;
+                const avgY =
+                  (region.uvPolygon.reduce((acc, p) => acc + p.v, 0) / region.uvPolygon.length) *
+                  EDITOR_HEIGHT;
+
+                let labelText = region.label.toUpperCase();
+                let fontSize = 9;
+                let textColor = '#ffffffb0';
+                let labelYOffset = 0;
+                let isFrontFace = false;
+
+                if (region.id === 'roof-front') {
+                  labelText = '▼ FRONT FACE (3D FRONT)';
+                  fontSize = 10;
+                  textColor = '#fef08a';
+                  labelYOffset = 18;
+                  isFrontFace = true;
+                } else if (region.id === 'valance-front') {
+                  labelText = 'FRONT VALANCE';
+                  fontSize = 8;
+                  textColor = '#fef08acc';
+                  isFrontFace = true;
+                } else if (region.id === 'roof-back') {
+                  labelText = '▲ BACK FACE';
+                  fontSize = 9;
+                  textColor = '#ffffffcc';
+                  labelYOffset = -6;
+                } else if (region.id === 'valance-back') {
+                  labelText = 'BACK VALANCE';
+                  fontSize = 8;
+                  textColor = '#ffffff99';
+                } else if (region.id === 'roof-left') {
+                  labelText = '◀ LEFT FACE';
+                  fontSize = 8;
+                  textColor = '#ffffffcc';
+                } else if (region.id === 'roof-right') {
+                  labelText = 'RIGHT FACE ▶';
+                  fontSize = 8;
+                  textColor = '#ffffffcc';
+                } else if (region.id === 'valance-left' || region.id === 'valance-right') {
+                  labelText = 'VALANCE';
+                  fontSize = 7;
+                  textColor = '#ffffff80';
+                }
+
                 return (
                   <Group key={region.id}>
-                    <Rect
-                      x={Math.min(...points.map((p) => p[0] ?? 0))}
-                      y={Math.min(...points.map((p) => p[1] ?? 0))}
-                      width={
-                        Math.max(...points.map((p) => p[0] ?? 0)) -
-                        Math.min(...points.map((p) => p[0] ?? 0))
-                      }
-                      height={
-                        Math.max(...points.map((p) => p[1] ?? 0)) -
-                        Math.min(...points.map((p) => p[1] ?? 0))
-                      }
-                      stroke="#ffffff40"
-                      strokeWidth={1}
-                      dash={[4, 4]}
+                    {/* Exact CAD polygon border & subtle panel fill */}
+                    <Line
+                      points={flatPoints}
+                      closed
+                      stroke={isFrontFace ? '#f59e0b90' : '#ffffff35'}
+                      strokeWidth={isFrontFace ? 1.5 : 1}
+                      dash={[4, 3]}
+                      fill={region.id === 'roof-front' ? '#f59e0b12' : '#ffffff05'}
+                      listening={false}
+                    />
+                    {/* High-visibility label notation */}
+                    <Text
+                      text={labelText}
+                      x={avgX - 60}
+                      y={avgY - fontSize / 2 + labelYOffset}
+                      width={120}
+                      align="center"
+                      fontSize={fontSize}
+                      fontStyle="bold"
+                      fill={textColor}
+                      shadowColor="#000000"
+                      shadowBlur={2}
+                      shadowOpacity={0.8}
                       listening={false}
                     />
                   </Group>
                 );
               })}
+
+            {/* Center Peak Marker for Canopy */}
+            {activeSectionId === 'canopy' && (
+              <Group listening={false}>
+                <Circle
+                  x={0.5 * EDITOR_WIDTH}
+                  y={0.5 * EDITOR_HEIGHT}
+                  radius={4}
+                  fill="#f59e0b"
+                  stroke="#ffffff"
+                  strokeWidth={1}
+                />
+                <Text
+                  text="▲ PEAK"
+                  x={0.5 * EDITOR_WIDTH - 30}
+                  y={0.5 * EDITOR_HEIGHT - 14}
+                  width={60}
+                  align="center"
+                  fontSize={8}
+                  fontStyle="bold"
+                  fill="#f59e0b"
+                  shadowColor="#000000"
+                  shadowBlur={2}
+                />
+              </Group>
+            )}
 
             {/* Design layers */}
             {sectionConfig.layers.map((layer) => {

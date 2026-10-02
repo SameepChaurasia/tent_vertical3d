@@ -154,23 +154,23 @@ function pushToHistory(state: ConfiguratorState): void {
 function getInitialRegionCoordinates(regionId: string): { x: number; y: number } {
   switch (regionId) {
     case 'roof-front':
-      return { x: 0.5, y: 0.35 };
+      return { x: 0.5, y: 0.72 };
     case 'roof-back':
-      return { x: 0.5, y: 0.65 };
+      return { x: 0.5, y: 0.28 };
     case 'roof-left':
-      return { x: 0.15, y: 0.5 };
+      return { x: 0.28, y: 0.5 };
     case 'roof-right':
-      return { x: 0.85, y: 0.5 };
+      return { x: 0.72, y: 0.5 };
     case 'valance-front':
-      return { x: 0.5, y: 0.08 };
+      return { x: 0.5, y: 0.925 };
     case 'valance-back':
-      return { x: 0.5, y: 0.92 };
+      return { x: 0.5, y: 0.075 };
     case 'valance-left':
-      return { x: 0.08, y: 0.5 };
+      return { x: 0.075, y: 0.5 };
     case 'valance-right':
-      return { x: 0.92, y: 0.5 };
+      return { x: 0.925, y: 0.5 };
     default:
-      return { x: 0.5, y: 0.5 };
+      return { x: 0.5, y: 0.72 };
   }
 }
 

@@ -86,34 +86,45 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
   }, [fetchQuote]);
 
   return (
-    <div className="pricing-panel">
-      <h3 className="pricing-panel-title">Price Breakdown</h3>
+    <div className="p-4 border-t border-white/10 bg-white/[0.01] flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h3 className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Price Breakdown</h3>
+        {isLoading && (
+          <span className="inline-flex items-center gap-1.5 text-[10px] text-amber-400 font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+            Updating…
+          </span>
+        )}
+      </div>
 
       {error && (
-        <div className="pricing-error" role="alert">
+        <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-xs text-rose-400 flex items-center justify-between" role="alert">
           <p>{error}</p>
-          <button onClick={fetchQuote} className="pricing-retry-button">
+          <button
+            onClick={fetchQuote}
+            className="px-2 py-1 rounded bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-semibold transition-colors"
+          >
             Retry
           </button>
         </div>
       )}
 
       {quote && (
-        <div className={`pricing-breakdown ${isLoading ? 'pricing-loading' : ''}`}>
-          <ul className="pricing-line-items">
+        <div className={`flex flex-col gap-2 transition-opacity duration-200 ${isLoading ? 'opacity-60' : 'opacity-100'}`}>
+          <ul className="flex flex-col gap-1.5">
             {quote.lineItems.map((item, index) => (
-              <li key={`${item.code}-${index}`} className="pricing-line-item">
-                <span className="pricing-item-label">{item.label}</span>
-                <span className={`pricing-item-amount ${item.amountCents < 0 ? 'pricing-discount' : ''}`}>
+              <li key={`${item.code}-${index}`} className="flex items-center justify-between text-xs text-slate-300">
+                <span className="text-slate-400">{item.label}</span>
+                <span className={`font-mono tabular-nums ${item.amountCents < 0 ? 'text-emerald-400 font-medium' : 'text-slate-200'}`}>
                   {item.amountCents < 0 ? '−' : ''}
                   {formatCentsAsDisplay(Math.abs(item.amountCents), quote.currency)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="pricing-total">
-            <span className="pricing-total-label">Total</span>
-            <span className="pricing-total-amount">
+          <div className="flex items-center justify-between pt-3 mt-1 border-t border-white/10 text-sm font-bold text-white">
+            <span className="tracking-wide">Estimated Total</span>
+            <span className="font-mono text-lg text-amber-400 tracking-tight tabular-nums">
               {formatCentsAsDisplay(quote.totalCents, quote.currency)}
             </span>
           </div>
@@ -121,10 +132,10 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
       )}
 
       {isLoading && !quote && (
-        <div className="pricing-skeleton">
-          <div className="pricing-skeleton-line" />
-          <div className="pricing-skeleton-line" />
-          <div className="pricing-skeleton-line pricing-skeleton-total" />
+        <div className="flex flex-col gap-2 animate-pulse py-2">
+          <div className="h-4 bg-white/5 rounded w-3/4" />
+          <div className="h-4 bg-white/5 rounded w-1/2" />
+          <div className="h-6 bg-white/10 rounded w-full mt-2" />
         </div>
       )}
     </div>

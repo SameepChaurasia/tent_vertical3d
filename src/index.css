@@ -1,4 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-studio-base: #0a0b0e;
+  --color-studio-surface: #11141c;
+  --color-studio-card: #181c26;
+  --color-studio-elevated: #202634;
+  --color-studio-hover: #293142;
+  --color-studio-accent: #f59e0b;
+  --color-studio-accent-hover: #fbbf24;
+  --color-studio-border: rgba(255, 255, 255, 0.09);
+  --color-studio-border-subtle: rgba(255, 255, 255, 0.05);
+  --color-studio-text: #f8fafc;
+  --color-studio-secondary: #94a3b8;
+  --color-studio-muted: #64748b;
+}
 
 /* ───── CSS Design System ───── */
 

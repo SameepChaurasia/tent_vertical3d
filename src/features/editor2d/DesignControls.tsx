@@ -185,25 +185,25 @@ export function DesignControls() {
   ];
 
   return (
-    <div className="design-controls" onKeyDown={handleKeyDown} tabIndex={0}>
+    <div className="p-4 space-y-5 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
       {/* Toolbar */}
-      <div className="controls-toolbar">
+      <div className="flex flex-wrap items-center gap-2 pb-4 border-b border-white/10">
         <button
-          className="control-button control-button-primary"
+          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer"
           onClick={handleAddText}
           title="Add Text"
         >
-          <span className="control-icon">T</span>
-          <span className="control-label">Add Text</span>
+          <span className="text-base font-bold leading-none">T</span>
+          <span>Add Text</span>
         </button>
 
         <button
-          className="control-button control-button-primary"
+          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer"
           onClick={() => fileInputRef.current?.click()}
           title="Upload Image"
         >
-          <span className="control-icon">📷</span>
-          <span className="control-label">Upload Image</span>
+          <span className="text-sm leading-none">📷</span>
+          <span>Upload Image</span>
         </button>
 
         <input
@@ -211,14 +211,14 @@ export function DesignControls() {
           type="file"
           accept="image/png,image/jpeg,image/webp"
           onChange={handleImageUpload}
-          className="file-input-hidden"
+          className="sr-only"
           aria-label="Upload artwork image"
         />
 
-        <div className="controls-separator" />
+        <div className="h-6 w-[1px] bg-white/10 mx-1" />
 
         <button
-          className="control-button"
+          className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
           onClick={undo}
           disabled={!canUndo}
           title="Undo (Ctrl+Z)"
@@ -226,7 +226,7 @@ export function DesignControls() {
           ↶
         </button>
         <button
-          className="control-button"
+          className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
           onClick={redo}
           disabled={!canRedo}
           title="Redo (Ctrl+Shift+Z)"
@@ -236,29 +236,33 @@ export function DesignControls() {
       </div>
 
       {uploadError && (
-        <div className="upload-error" role="alert">
-          {uploadError}
+        <div className="p-2.5 text-xs text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-lg flex items-center gap-2" role="alert">
+          <span>⚠️</span>
+          <span>{uploadError}</span>
         </div>
       )}
 
       {/* Base colour picker */}
-      <div className="controls-section">
-        <h4 className="controls-section-title">Base Color</h4>
-        <div className="color-swatches">
-          {colorSwatches.map((color) => (
-            <button
-              key={color}
-              className={`color-swatch ${
-                sectionConfig?.baseColor === color ? 'color-swatch-selected' : ''
-              }`}
-              style={{ backgroundColor: color }}
-              onClick={() => setSectionBaseColor(sectionId, color)}
-              aria-label={`Set base color to ${color}`}
-            />
-          ))}
+      <div className="space-y-3 pb-4 border-b border-white/10">
+        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Base Color</h4>
+        <div className="flex flex-wrap gap-2">
+          {colorSwatches.map((color) => {
+            const isSelected = sectionConfig?.baseColor?.toLowerCase() === color.toLowerCase();
+            return (
+              <button
+                key={color}
+                className={`w-7 h-7 rounded-md border border-white/15 cursor-pointer transition-all hover:scale-110 shadow-sm relative focus:outline-none ${
+                  isSelected ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-950 border-white scale-105' : ''
+                }`}
+                style={{ backgroundColor: color }}
+                onClick={() => setSectionBaseColor(sectionId, color)}
+                aria-label={`Set base color to ${color}`}
+              />
+            );
+          })}
         </div>
-        <div className="color-hex-input">
-          <label htmlFor="base-color-hex">Hex:</label>
+        <div className="flex items-center gap-2 text-xs text-slate-400">
+          <label htmlFor="base-color-hex" className="font-medium">Hex:</label>
           <input
             id="base-color-hex"
             type="text"
@@ -270,16 +274,17 @@ export function DesignControls() {
             }}
             maxLength={9}
             pattern="^#[0-9a-fA-F]{3,8}$"
+            className="w-24 px-2 py-1 text-xs font-mono bg-slate-950/80 border border-white/10 rounded-md text-white focus:outline-none focus:border-amber-400"
           />
         </div>
       </div>
 
       {/* Brand Templates / Presets */}
-      <div className="controls-section">
-        <h4 className="controls-section-title">Brand Templates</h4>
-        <div className="preset-chips">
+      <div className="space-y-3 pb-4 border-b border-white/10">
+        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Brand Templates</h4>
+        <div className="flex flex-wrap gap-2">
           <button
-            className="preset-chip"
+            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#0F172A');
               setSectionBaseColor('frame', '#334155');
@@ -294,10 +299,10 @@ export function DesignControls() {
             }}
             title="Sleek midnight blue AI showcase with cyan accents"
           >
-            ⚡ Apex AI
+            <span>⚡</span> Apex AI
           </button>
           <button
-            className="preset-chip"
+            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#EA580C');
               setSectionBaseColor('frame', '#E2E8F0');
@@ -312,10 +317,10 @@ export function DesignControls() {
             }}
             title="Energetic orange festival booth with bold lettering"
           >
-            🔥 Festival
+            <span>🔥</span> Festival
           </button>
           <button
-            className="preset-chip"
+            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#18181B');
               setSectionBaseColor('frame', '#DC2626');
@@ -330,22 +335,27 @@ export function DesignControls() {
             }}
             title="Matte black motorsport setup with racing red text"
           >
-            🏁 Motorsport
+            <span>🏁</span> Motorsport
           </button>
         </div>
       </div>
 
       {/* Selected layer properties */}
       {selectedLayer && (
-        <div className="controls-section">
-          <h4 className="controls-section-title">
-            {selectedLayer.kind === 'text' ? 'Text Properties' : 'Image Properties'}
-          </h4>
+        <div className="space-y-3.5 p-3.5 bg-slate-950/50 border border-white/10 rounded-xl">
+          <div className="flex items-center justify-between">
+            <h4 className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
+              {selectedLayer.kind === 'text' ? 'Text Layer Settings' : 'Image Layer Settings'}
+            </h4>
+            <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded border border-white/5">
+              ID: {selectedLayer.id.slice(0, 6)}
+            </span>
+          </div>
 
           {selectedLayer.kind === 'text' && (
-            <div className="layer-properties">
-              <div className="property-row">
-                <label htmlFor="text-content">Text:</label>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <label htmlFor="text-content" className="text-xs text-slate-400 w-14 shrink-0">Text:</label>
                 <input
                   id="text-content"
                   type="text"
@@ -356,11 +366,12 @@ export function DesignControls() {
                     })
                   }
                   maxLength={200}
+                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400"
                 />
               </div>
 
-              <div className="property-row">
-                <label htmlFor="text-font">Font:</label>
+              <div className="flex items-center gap-3">
+                <label htmlFor="text-font" className="text-xs text-slate-400 w-14 shrink-0">Font:</label>
                 <select
                   id="text-font"
                   value={selectedLayer.fontFamily}
@@ -369,6 +380,7 @@ export function DesignControls() {
                       fontFamily: e.target.value as typeof selectedLayer.fontFamily,
                     })
                   }
+                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400"
                 >
                   {ALLOWED_FONT_FAMILIES.map((font) => (
                     <option key={font} value={font}>
@@ -378,8 +390,8 @@ export function DesignControls() {
                 </select>
               </div>
 
-              <div className="property-row">
-                <label htmlFor="text-size">Size:</label>
+              <div className="flex items-center gap-3">
+                <label htmlFor="text-size" className="text-xs text-slate-400 w-14 shrink-0">Size:</label>
                 <input
                   id="text-size"
                   type="number"
@@ -391,28 +403,38 @@ export function DesignControls() {
                   }
                   min={8}
                   max={200}
+                  className="w-20 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white font-mono focus:outline-none focus:border-amber-400"
                 />
+                <span className="text-[11px] text-slate-500">pt</span>
               </div>
 
-              <div className="property-row">
-                <label htmlFor="text-color">Color:</label>
-                <input
-                  id="text-color"
-                  type="color"
-                  value={selectedLayer.fill}
-                  onChange={(e) =>
-                    updateLayer(sectionId, selectedLayer.id, { fill: e.target.value })
-                  }
-                />
+              <div className="flex items-center gap-3">
+                <label htmlFor="text-color" className="text-xs text-slate-400 w-14 shrink-0">Color:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="text-color"
+                    type="color"
+                    value={selectedLayer.fill}
+                    onChange={(e) =>
+                      updateLayer(sectionId, selectedLayer.id, { fill: e.target.value })
+                    }
+                    className="w-8 h-8 rounded border border-white/15 cursor-pointer bg-transparent"
+                  />
+                  <span className="text-xs font-mono text-slate-300">{selectedLayer.fill.toUpperCase()}</span>
+                </div>
               </div>
 
-              <div className="property-row">
-                <label>Align:</label>
-                <div className="align-buttons">
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-slate-400 w-14 shrink-0">Align:</span>
+                <div className="flex items-center gap-1 bg-slate-900 p-1 border border-white/10 rounded-lg">
                   {(['left', 'center', 'right'] as const).map((align) => (
                     <button
                       key={align}
-                      className={`align-button ${selectedLayer.align === align ? 'align-button-active' : ''}`}
+                      className={`px-3 py-1 text-xs font-bold rounded cursor-pointer transition-colors ${
+                        selectedLayer.align === align
+                          ? 'bg-amber-500 text-slate-950 shadow-sm'
+                          : 'text-slate-400 hover:text-white'
+                      }`}
                       onClick={() =>
                         updateLayer(sectionId, selectedLayer.id, { align })
                       }
@@ -424,8 +446,8 @@ export function DesignControls() {
                 </div>
               </div>
 
-              <div className="property-row">
-                <label htmlFor="text-opacity">Opacity:</label>
+              <div className="flex items-center gap-3">
+                <label htmlFor="text-opacity" className="text-xs text-slate-400 w-14 shrink-0">Opacity:</label>
                 <input
                   id="text-opacity"
                   type="range"
@@ -437,16 +459,19 @@ export function DesignControls() {
                       opacity: Number(e.target.value) / 100,
                     })
                   }
+                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
-                <span className="opacity-val">{Math.round(selectedLayer.opacity * 100)}%</span>
+                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
+                  {Math.round(selectedLayer.opacity * 100)}%
+                </span>
               </div>
             </div>
           )}
 
           {selectedLayer.kind === 'image' && (
-            <div className="layer-properties">
-              <div className="property-row">
-                <label htmlFor="image-opacity">Opacity:</label>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <label htmlFor="image-opacity" className="text-xs text-slate-400 w-14 shrink-0">Opacity:</label>
                 <input
                   id="image-opacity"
                   type="range"
@@ -458,24 +483,27 @@ export function DesignControls() {
                       opacity: Number(e.target.value) / 100,
                     })
                   }
+                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
-                <span className="opacity-val">{Math.round(selectedLayer.opacity * 100)}%</span>
+                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
+                  {Math.round(selectedLayer.opacity * 100)}%
+                </span>
               </div>
             </div>
           )}
 
-          <div className="layer-actions">
+          <div className="flex items-center gap-2 pt-2 border-t border-white/10">
             <button
-              className="control-button control-button-danger"
+              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center"
               onClick={handleDeleteSelected}
             >
-              Delete
+              🗑️ Delete Layer
             </button>
             <button
-              className="control-button"
+              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/5 text-slate-200 border border-white/10 hover:bg-white/10 hover:text-white transition-all cursor-pointer text-center"
               onClick={handleDuplicateSelected}
             >
-              Duplicate
+              📋 Duplicate
             </button>
           </div>
         </div>
@@ -483,37 +511,46 @@ export function DesignControls() {
 
       {/* Layer list */}
       {sectionConfig && sectionConfig.layers.length > 0 && (
-        <div className="controls-section">
-          <h4 className="controls-section-title">Layers</h4>
-          <ul className="layer-list">
-            {[...sectionConfig.layers].reverse().map((layer) => (
-              <li
-                key={layer.id}
-                className={`layer-list-item ${
-                  selectedLayerId === layer.id ? 'layer-list-item-selected' : ''
-                }`}
-                onClick={() => selectLayer(layer.id)}
-              >
-                <span className="layer-icon">
-                  {layer.kind === 'text' ? 'T' : '🖼'}
-                </span>
-                <span className="layer-name">
-                  {layer.kind === 'text'
-                    ? layer.content.slice(0, 20) || 'Empty Text'
-                    : 'Image'}
-                </span>
-                <button
-                  className="layer-visibility-toggle"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    updateLayer(sectionId, layer.id, { visible: !layer.visible });
-                  }}
-                  aria-label={layer.visible ? 'Hide layer' : 'Show layer'}
+        <div className="space-y-2.5">
+          <div className="flex items-center justify-between">
+            <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Active Layers</h4>
+            <span className="text-[10px] font-mono text-slate-500">{sectionConfig.layers.length} items</span>
+          </div>
+          <ul className="space-y-1.5">
+            {[...sectionConfig.layers].reverse().map((layer) => {
+              const isSelected = selectedLayerId === layer.id;
+              return (
+                <li
+                  key={layer.id}
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg border transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-amber-500/15 border-amber-500/50 text-amber-200 shadow-sm'
+                      : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10 text-slate-300'
+                  }`}
+                  onClick={() => selectLayer(layer.id)}
                 >
-                  {layer.visible ? '👁' : '👁‍🗨'}
-                </button>
-              </li>
-            ))}
+                  <span className="w-5 text-center text-sm font-bold opacity-80">
+                    {layer.kind === 'text' ? 'T' : '🖼'}
+                  </span>
+                  <span className="flex-1 text-xs font-medium truncate">
+                    {layer.kind === 'text'
+                      ? layer.content.slice(0, 24) || 'Empty Text'
+                      : 'Artwork Image'}
+                  </span>
+                  <button
+                    className="p-1 text-xs opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      updateLayer(sectionId, layer.id, { visible: !layer.visible });
+                    }}
+                    aria-label={layer.visible ? 'Hide layer' : 'Show layer'}
+                    title={layer.visible ? 'Hide layer' : 'Show layer'}
+                  >
+                    {layer.visible ? '👁' : '👁‍🗨'}
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </div>
       )}

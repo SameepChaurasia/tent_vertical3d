@@ -116,49 +116,53 @@ export function CheckoutBar({
 
   return (
     <>
-      <div className="checkout-bar">
-        <div className="checkout-product-info">
-          <div className="checkout-product-thumbnail">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <div className="h-[68px] px-6 flex items-center justify-between bg-slate-950/95 backdrop-blur-xl border-t border-white/10 z-30 shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-400 shrink-0">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M3 21h18M4 18l8-12 8 12M4 18h16" />
             </svg>
           </div>
-          <div className="checkout-product-details">
-            <div className="checkout-product-title-row">
-              <h3 className="checkout-product-name">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <h3 className="text-xs font-bold text-white tracking-wide uppercase">
                 {productDef?.name ?? 'Product'}
               </h3>
               <button
                 type="button"
-                className={`checkout-notes-btn ${notesValue.trim() ? 'has-notes' : ''}`}
+                className={`text-[11px] px-2.5 py-0.5 rounded-full border transition-all cursor-pointer font-medium ${
+                  notesValue.trim()
+                    ? 'bg-amber-500/15 border-amber-500 text-amber-300 font-semibold shadow-[0_0_8px_rgba(245,158,11,0.2)]'
+                    : 'bg-white/5 border-white/10 text-slate-400 hover:text-white hover:border-white/20'
+                }`}
                 onClick={() => setShowNotesModal((prev) => !prev)}
                 title="Add PMS Pantone colors or special printing instructions"
               >
                 {notesValue.trim() ? '📝 Notes Added' : '+ Instructions'}
               </button>
             </div>
-            <p className="checkout-variant-summary">{optionSummary}</p>
+            <p className="text-[11px] text-slate-400 max-w-[320px] truncate">{optionSummary}</p>
           </div>
         </div>
 
-        <div className="checkout-price-actions">
+        <div className="flex items-center gap-4">
           {/* Interactive Volume Quantity Stepper */}
-          <div className="checkout-quantity-stepper" aria-label="Select item quantity">
+          <div className="flex items-center bg-white/[0.04] border border-white/10 rounded-lg overflow-hidden h-9" aria-label="Select item quantity">
             <button
               type="button"
-              className="quantity-btn"
+              className="w-8 h-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-bold text-sm"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
               disabled={quantity <= 1 || isAdding}
               aria-label="Decrease quantity"
             >
               −
             </button>
-            <span className="quantity-display" title={`Order quantity: ${quantity}`} aria-live="polite">
+            <span className="min-w-7 px-1 text-center font-mono font-bold text-xs text-white tabular-nums" title={`Order quantity: ${quantity}`} aria-live="polite">
               {quantity}
             </span>
             <button
               type="button"
-              className="quantity-btn"
+              className="w-8 h-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-white/10 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer font-bold text-sm"
               onClick={() => setQuantity(quantity + 1)}
               disabled={quantity >= 99 || isAdding}
               aria-label="Increase quantity"
@@ -167,14 +171,18 @@ export function CheckoutBar({
             </button>
           </div>
 
-          <span className="checkout-price">
+          <span className="font-mono text-xl font-bold text-amber-400 tracking-tight tabular-nums">
             {currentQuote
               ? formatCentsAsDisplay(currentQuote.totalCents, currentQuote.currency)
               : '—'}
           </span>
 
           <button
-            className={`checkout-add-to-cart ${cartSuccess ? 'checkout-success' : ''}`}
+            className={`h-10 px-7 rounded-lg font-bold text-xs tracking-wider uppercase transition-all duration-150 cursor-pointer shadow-lg flex items-center justify-center ${
+              cartSuccess
+                ? 'bg-emerald-500 text-white'
+                : 'bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 shadow-amber-500/20 hover:shadow-amber-500/35 hover:-translate-y-0.5 active:translate-y-0'
+            } disabled:opacity-40 disabled:cursor-not-allowed`}
             onClick={handleAddToCart}
             disabled={isAdding || !currentQuote}
           >
@@ -186,7 +194,7 @@ export function CheckoutBar({
           </button>
 
           <button
-            className="checkout-inspector-toggle"
+            className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 hover:border-white/25 hover:bg-white/10 flex items-center justify-center text-xs font-mono text-slate-300 hover:text-white transition-all cursor-pointer"
             onClick={() => setShowCartInspector((prev) => !prev)}
             title="Show Shopify Payload Inspector"
           >
@@ -196,40 +204,42 @@ export function CheckoutBar({
       </div>
 
       {cartError && (
-        <div className="checkout-error" role="alert">
+        <div className="px-6 py-2 bg-rose-500/10 border-t border-rose-500/30 text-xs text-rose-400 text-center" role="alert">
           {cartError}
         </div>
       )}
 
       {/* Design Notes & Printing Instructions Modal */}
       {showNotesModal && (
-        <div className="checkout-notes-popover">
-          <div className="checkout-notes-header">
-            <h4>🎨 Custom Printing Instructions / PMS Codes</h4>
+        <div className="fixed bottom-[80px] left-6 w-96 bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl p-4 z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-xs font-bold text-white tracking-wide flex items-center gap-1.5">
+              <span>🎨</span> Custom Printing Instructions / PMS Codes
+            </h4>
             <button
               type="button"
-              className="checkout-notes-close"
+              className="text-slate-400 hover:text-white text-lg leading-none cursor-pointer p-1"
               onClick={() => setShowNotesModal(false)}
             >
               ×
             </button>
           </div>
-          <p className="checkout-notes-desc">
+          <p className="text-[11px] text-slate-400 mb-3 leading-relaxed">
             Provide PMS / Pantone color match codes or placement notes for our pre-press team.
           </p>
           <textarea
-            className="checkout-notes-textarea"
+            className="w-full bg-slate-950 border border-white/10 rounded-lg text-slate-200 text-xs p-2.5 resize-y outline-none focus:border-amber-400 transition-colors"
             placeholder="e.g. Roof: PMS 286 Blue, Valance: PMS 186 Red. Center logo 3 inches above valance seam."
             value={notesValue}
             onChange={(e) => setNotesValue(e.target.value)}
             maxLength={500}
             rows={4}
           />
-          <div className="checkout-notes-footer">
-            <span className="checkout-notes-count">{notesValue.length}/500</span>
+          <div className="flex items-center justify-between mt-3 pt-2 border-t border-white/10">
+            <span className="text-[10px] text-slate-500 font-mono">{notesValue.length}/500</span>
             <button
               type="button"
-              className="checkout-notes-done-btn"
+              className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold transition-all cursor-pointer"
               onClick={() => setShowNotesModal(false)}
             >
               Save Instructions
@@ -240,17 +250,25 @@ export function CheckoutBar({
 
       {/* Shopify Payload Inspector — shows exactly what would be sent */}
       {showCartInspector && activePayload && (
-        <div className="cart-inspector">
-          <div className="cart-inspector-header">
-            <h4>Shopify Cart Payload Inspector</h4>
-            <button onClick={() => setShowCartInspector(false)}>×</button>
+        <div className="fixed bottom-[80px] right-6 w-[440px] max-h-[460px] bg-slate-900/95 backdrop-blur-xl border border-white/15 rounded-xl shadow-2xl flex flex-col z-50 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <div className="flex items-center justify-between p-3.5 border-b border-white/10">
+            <h4 className="text-xs font-bold text-white tracking-wide font-mono flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400" />
+              Shopify Cart Payload Inspector
+            </h4>
+            <button
+              onClick={() => setShowCartInspector(false)}
+              className="text-slate-400 hover:text-white text-lg leading-none cursor-pointer p-1"
+            >
+              ×
+            </button>
           </div>
-          <pre className="cart-inspector-json">
+          <pre className="p-3.5 text-[11px] font-mono text-emerald-300 bg-slate-950 overflow-y-auto max-h-[300px] leading-relaxed">
             {JSON.stringify(activePayload, null, 2)}
           </pre>
-          <p className="cart-inspector-note">
-            This is the exact payload that would be sent to Shopify&apos;s{' '}
-            <code>/cart/add.js</code> API. Properties prefixed with underscore
+          <p className="p-3 text-[10px] text-slate-400 bg-slate-900/90 border-t border-white/10 leading-normal">
+            This is the exact payload sent to Shopify&apos;s{' '}
+            <code className="text-amber-300 bg-white/5 px-1 py-0.5 rounded">/cart/add.js</code> API. Properties prefixed with underscore
             are hidden from the customer at checkout.
           </p>
         </div>

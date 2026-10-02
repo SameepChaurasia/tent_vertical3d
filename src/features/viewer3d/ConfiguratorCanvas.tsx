@@ -208,42 +208,62 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
     return (
       <div
         ref={containerRef}
-        className={`viewer-3d-container ${isNightMode ? 'viewer-night-mode' : ''} ${className ?? ''}`}
+        className={`viewer-3d-container relative w-full h-full ${isNightMode ? 'viewer-night-mode' : ''} ${className ?? ''}`}
       >
         {/* Floating Camera & Viewer Toolbar */}
-        <div className="viewer-floating-toolbar" role="toolbar" aria-label="3D Viewer Controls">
+        <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-slate-950/85 backdrop-blur-md border border-white/15 rounded-full shadow-2xl z-10" role="toolbar" aria-label="3D Viewer Controls">
           {/* Camera Angles */}
-          <div className="viewer-toolbar-group">
+          <div className="flex items-center gap-1">
             <button
-              className={`viewer-tool-button ${activePreset === 'front' ? 'viewer-tool-button-active' : ''}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                activePreset === 'front'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setActivePreset('front')}
               title="Front View"
             >
               Front
             </button>
             <button
-              className={`viewer-tool-button ${activePreset === 'isometric' ? 'viewer-tool-button-active' : ''}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                activePreset === 'isometric'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setActivePreset('isometric')}
               title="Isometric 3D View"
             >
               3D Iso
             </button>
             <button
-              className={`viewer-tool-button ${activePreset === 'side' ? 'viewer-tool-button-active' : ''}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                activePreset === 'side'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setActivePreset('side')}
               title="Side View"
             >
               Side
             </button>
             <button
-              className={`viewer-tool-button ${activePreset === 'back' ? 'viewer-tool-button-active' : ''}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                activePreset === 'back'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setActivePreset('back')}
               title="Back View"
             >
               Back
             </button>
             <button
-              className={`viewer-tool-button ${activePreset === 'top' ? 'viewer-tool-button-active' : ''}`}
+              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
+                activePreset === 'top'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setActivePreset('top')}
               title="Top View"
             >
@@ -251,38 +271,54 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             </button>
           </div>
 
-          <div className="viewer-tool-separator" />
+          <div className="w-[1px] h-4 bg-white/20 mx-1" />
 
           {/* Interactive Feature Toggles */}
-          <div className="viewer-toolbar-group">
+          <div className="flex items-center gap-1">
             <button
-              className={`viewer-tool-button ${showHotspots ? 'viewer-tool-button-active' : ''}`}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+                showHotspots
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setShowHotspots((prev) => !prev)}
               title="Toggle Feature Hotspots"
             >
-              📍 Hotspots
+              <span>📍</span> Hotspots
             </button>
             <button
-              className={`viewer-tool-button ${showDimensions ? 'viewer-tool-button-active' : ''}`}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+                showDimensions
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setShowDimensions((prev) => !prev)}
               title="Toggle 3D Dimensions"
             >
-              📏 Measure
+              <span>📏</span> Measure
             </button>
             <button
-              className={`viewer-tool-button ${isNightMode ? 'viewer-tool-button-active' : ''}`}
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+                isNightMode
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+              }`}
               onClick={() => setIsNightMode((prev) => !prev)}
               title="Toggle Night Mode with Interior LED Illumination"
             >
-              💡 LED Night
+              <span>💡</span> LED Night
             </button>
           </div>
 
-          <div className="viewer-tool-separator" />
+          <div className="w-[1px] h-4 bg-white/20 mx-1" />
 
           {/* Turntable Auto-rotate */}
           <button
-            className={`viewer-tool-button ${isAutoRotating ? 'viewer-tool-button-active' : ''}`}
+            className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+              isAutoRotating
+                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
+                : 'text-slate-300 hover:text-white hover:bg-white/10'
+            }`}
             onClick={() => setIsAutoRotating((prev) => !prev)}
             title="Toggle 360° Turntable Rotation"
           >
@@ -292,26 +328,26 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             360°
           </button>
 
-          <div className="viewer-tool-separator" />
+          <div className="w-[1px] h-4 bg-white/20 mx-1" />
 
           {/* Lighting Mode Selector */}
           <select
-            className="viewer-tool-select"
+            className="px-2.5 py-1 text-xs font-medium rounded-full bg-white/10 border border-white/15 text-slate-200 outline-none cursor-pointer hover:bg-white/15"
             value={envPreset}
             onChange={(e) => setEnvPreset(e.target.value as EnvironmentType)}
             title="Environment Lighting"
             aria-label="Select environment lighting"
             disabled={isNightMode}
           >
-            <option value="city">🏙️ Daylight</option>
-            <option value="studio">💡 Studio</option>
-            <option value="sunset">🌅 Sunset</option>
+            <option value="city" className="bg-slate-900 text-white">🏙️ Daylight</option>
+            <option value="studio" className="bg-slate-900 text-white">💡 Studio</option>
+            <option value="sunset" className="bg-slate-900 text-white">🌅 Sunset</option>
           </select>
         </div>
 
         {/* Floating Snapshot Button */}
         <button
-          className="viewer-snapshot-button"
+          className="absolute bottom-4 right-4 flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-slate-950/85 backdrop-blur-md border border-white/15 rounded-full shadow-xl hover:bg-amber-500 hover:text-slate-950 hover:-translate-y-0.5 transition-all z-10 cursor-pointer"
           onClick={handleDownloadSnapshot}
           title="Download High-Res 3D Snapshot"
         >

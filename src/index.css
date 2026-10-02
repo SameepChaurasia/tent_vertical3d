@@ -362,6 +362,178 @@ body {
   transform: translateY(-1px);
 }
 
+/* ── Night Mode & Viewer Transitions ── */
+
+.configurator-viewer:has(.viewer-night-mode) {
+  background: radial-gradient(circle at center, #1b2436 0%, #0d111a 100%);
+  transition: background 0.6s ease;
+}
+
+/* ── 3D Hotspots & Callouts ── */
+
+.hotspot-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.hotspot-pin {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #000000;
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 0 14px rgba(245, 166, 35, 0.7);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+  z-index: 2;
+}
+
+.hotspot-pin:hover,
+.hotspot-pin-active {
+  transform: scale(1.2);
+  background: #ffffff;
+  color: #000000;
+}
+
+.hotspot-pulse {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  right: -4px;
+  bottom: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--color-accent);
+  animation: hotspot-ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes hotspot-ping {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.9;
+  }
+  75%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.hotspot-card {
+  position: absolute;
+  bottom: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: rgba(18, 18, 28, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: card-appear 0.2s ease-out;
+  pointer-events: auto;
+  z-index: 100;
+}
+
+@keyframes card-appear {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+.hotspot-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-1);
+}
+
+.hotspot-card-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-accent);
+}
+
+.hotspot-card-close {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.hotspot-card-close:hover {
+  color: #ffffff;
+}
+
+.hotspot-card-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: var(--space-1);
+}
+
+.hotspot-card-desc {
+  font-size: 11px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+
+/* ── 3D Dimension Badges ── */
+
+.dimension-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(10px);
+  border: 1px solid #f5a623;
+  padding: 3px 8px;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.dimension-badge-blue {
+  border-color: #38bdf8;
+}
+
+.dimension-title {
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+}
+
+.dimension-value {
+  font-size: 11px;
+  font-weight: 800;
+  font-family: monospace;
+  color: #ffffff;
+}
+
 /* ── Viewer Loading & Error ── */
 
 .viewer-loading-skeleton,

@@ -9,6 +9,8 @@ import {
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import * as THREE from 'three';
 import { CanopyModel } from './CanopyModel';
+import { ViewerHotspots } from './ViewerHotspots';
+import { ViewerDimensions } from './ViewerDimensions';
 import { useConfiguratorStore, selectProductDefinition, selectCurrentSizeId } from '../configurator/configurator.store';
 import { ViewerErrorBoundary } from './ViewerErrorBoundary';
 import { ViewerLoadingSkeleton } from './ViewerLoadingSkeleton';
@@ -39,9 +41,19 @@ interface ViewerSceneProps {
   preset: CameraPresetName;
   isAutoRotating: boolean;
   environmentPreset: EnvironmentType;
+  showHotspots: boolean;
+  showDimensions: boolean;
+  isNightMode: boolean;
 }
 
-function ViewerScene({ preset, isAutoRotating, environmentPreset }: ViewerSceneProps) {
+function ViewerScene({
+  preset,
+  isAutoRotating,
+  environmentPreset,
+  showHotspots,
+  showDimensions,
+  isNightMode,
+}: ViewerSceneProps) {
   const controlsRef = useRef<OrbitControlsImpl>(null);
   const { camera, invalidate } = useThree();
 
@@ -78,28 +90,55 @@ function ViewerScene({ preset, isAutoRotating, environmentPreset }: ViewerSceneP
         autoRotateSpeed={2.5}
       />
 
-      <ambientLight intensity={0.5} />
+      {/* Dynamic Lighting: Studio vs Night Mode */}
+      <ambientLight intensity={isNightMode ? 0.12 : 0.5} />
       <directionalLight
         position={[5, 8, 5]}
-        intensity={1.3}
+        intensity={isNightMode ? 0.2 : 1.3}
+        color={isNightMode ? '#7D9BB8' : '#FFFFFF'}
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
       />
       <directionalLight
         position={[-3, 4, -2]}
-        intensity={0.4}
+        intensity={isNightMode ? 0.1 : 0.4}
+        color={isNightMode ? '#5C7A9E' : '#FFFFFF'}
       />
 
-      <Environment preset={environmentPreset} background={false} />
+      {/* Interior Warm LED Chandelier Fixture in Night Mode */}
+      {isNightMode && (
+        <group position={[0, 1.72, 0]}>
+          <pointLight
+            color="#FFDF99"
+            intensity={4.5}
+            distance={5.5}
+            decay={2}
+            castShadow
+          />
+          {/* Glowing LED fixture mesh */}
+          <mesh position={[0, 0.05, 0]}>
+            <sphereGeometry args={[0.04, 16, 16]} />
+            <meshBasicMaterial color="#FFF1C2" />
+          </mesh>
+        </group>
+      )}
+
+      <Environment
+        preset={isNightMode ? 'sunset' : environmentPreset}
+        background={false}
+        environmentIntensity={isNightMode ? 0.15 : 1}
+      />
 
       <Suspense fallback={null}>
         <CanopyModel />
+        <ViewerHotspots visible={showHotspots} />
+        <ViewerDimensions visible={showDimensions} />
       </Suspense>
 
       <ContactShadows
         position={[0, -0.01, 0]}
-        opacity={0.4}
+        opacity={isNightMode ? 0.6 : 0.4}
         scale={8}
         blur={2.2}
         far={4}
@@ -112,7 +151,10 @@ function ViewerScene({ preset, isAutoRotating, environmentPreset }: ViewerSceneP
         receiveShadow
       >
         <planeGeometry args={[20, 20]} />
-        <meshStandardMaterial color="#e8e8e8" roughness={0.9} />
+        <meshStandardMaterial
+          color={isNightMode ? '#14141e' : '#e8e8e8'}
+          roughness={0.9}
+        />
       </mesh>
     </>
   );
@@ -128,6 +170,9 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
     const [activePreset, setActivePreset] = useState<CameraPresetName>('isometric');
     const [isAutoRotating, setIsAutoRotating] = useState(false);
     const [envPreset, setEnvPreset] = useState<EnvironmentType>('city');
+    const [showHotspots, setShowHotspots] = useState(false);
+    const [showDimensions, setShowDimensions] = useState(false);
+    const [isNightMode, setIsNightMode] = useState(false);
 
     useImperativeHandle(ref, () => ({
       captureSnapshots: async (angles) => {
@@ -161,9 +206,13 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
     }
 
     return (
-      <div ref={containerRef} className={`viewer-3d-container ${className ?? ''}`}>
+      <div
+        ref={containerRef}
+        className={`viewer-3d-container ${isNightMode ? 'viewer-night-mode' : ''} ${className ?? ''}`}
+      >
         {/* Floating Camera & Viewer Toolbar */}
         <div className="viewer-floating-toolbar" role="toolbar" aria-label="3D Viewer Controls">
+          {/* Camera Angles */}
           <div className="viewer-toolbar-group">
             <button
               className={`viewer-tool-button ${activePreset === 'front' ? 'viewer-tool-button-active' : ''}`}
@@ -204,6 +253,33 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
 
           <div className="viewer-tool-separator" />
 
+          {/* Interactive Feature Toggles */}
+          <div className="viewer-toolbar-group">
+            <button
+              className={`viewer-tool-button ${showHotspots ? 'viewer-tool-button-active' : ''}`}
+              onClick={() => setShowHotspots((prev) => !prev)}
+              title="Toggle Feature Hotspots"
+            >
+              📍 Hotspots
+            </button>
+            <button
+              className={`viewer-tool-button ${showDimensions ? 'viewer-tool-button-active' : ''}`}
+              onClick={() => setShowDimensions((prev) => !prev)}
+              title="Toggle 3D Dimensions"
+            >
+              📏 Measure
+            </button>
+            <button
+              className={`viewer-tool-button ${isNightMode ? 'viewer-tool-button-active' : ''}`}
+              onClick={() => setIsNightMode((prev) => !prev)}
+              title="Toggle Night Mode with Interior LED Illumination"
+            >
+              💡 LED Night
+            </button>
+          </div>
+
+          <div className="viewer-tool-separator" />
+
           {/* Turntable Auto-rotate */}
           <button
             className={`viewer-tool-button ${isAutoRotating ? 'viewer-tool-button-active' : ''}`}
@@ -225,6 +301,7 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             onChange={(e) => setEnvPreset(e.target.value as EnvironmentType)}
             title="Environment Lighting"
             aria-label="Select environment lighting"
+            disabled={isNightMode}
           >
             <option value="city">🏙️ Daylight</option>
             <option value="studio">💡 Studio</option>
@@ -261,6 +338,9 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             preset={activePreset}
             isAutoRotating={isAutoRotating}
             environmentPreset={envPreset}
+            showHotspots={showHotspots}
+            showDimensions={showDimensions}
+            isNightMode={isNightMode}
           />
         </Canvas>
       </div>

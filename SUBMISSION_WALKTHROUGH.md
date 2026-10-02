@@ -114,10 +114,10 @@ All amounts in the pricing engine, schemas, and state store are integer cents (`
  ✓ tests/pricing-engine.test.ts (15 tests)
  ✓ tests/embed-protocol.test.ts (12 tests)
  ✓ tests/schema-validation.test.ts (10 tests)
- ✓ tests/configurator-integration.test.ts (6 tests)
+ ✓ tests/configurator-integration.test.ts (8 tests)
 
  Test Files  4 passed (4)
-      Tests  43 passed (43)
+      Tests  45 passed (45)
 ```
 
 ---

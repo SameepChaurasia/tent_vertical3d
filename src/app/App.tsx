@@ -39,6 +39,7 @@ export function App() {
   const [currentQuote, setCurrentQuote] = useState<PriceQuote | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveTab>('3d');
   const [isPdfGenerating, setIsPdfGenerating] = useState(false);
+  const [designNotes, setDesignNotes] = useState('');
 
   /* Embed mode — sends postMessage events when running in iframe */
   const { isEmbed } = useEmbedMode();
@@ -75,13 +76,14 @@ export function App() {
         configuration,
         productDefinition: productDef,
         quote: currentQuote,
+        designNotes,
         previewSnapshot,
         artworkSnapshot,
       });
     } finally {
       setIsPdfGenerating(false);
     }
-  }, [configuration, productDef, currentQuote]);
+  }, [configuration, productDef, currentQuote, designNotes]);
 
   return (
     <div className={`configurator-app ${isEmbed ? 'embed-mode' : ''}`}>
@@ -187,6 +189,8 @@ export function App() {
       <CheckoutBar
         cartService={cartService}
         currentQuote={currentQuote}
+        designNotes={designNotes}
+        onDesignNotesChange={setDesignNotes}
       />
     </div>
   );

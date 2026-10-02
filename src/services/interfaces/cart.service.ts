@@ -23,6 +23,7 @@ export interface CartService {
     configuration: Configuration,
     quote: PriceQuote,
     variantId: string,
+    notes?: string,
   ): ShopifyCartPayload;
 
   /** Add the configured product to the cart */

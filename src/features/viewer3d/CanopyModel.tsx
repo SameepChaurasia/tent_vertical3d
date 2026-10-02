@@ -417,7 +417,9 @@ export function CanopyModel() {
     return cloned;
   }, [scene, modelVariant]);
 
-  /* ── Sync: 2D configuration → 3D canvas texture ── */
+  /* ── Sync: 2D configuration → 3D canvas texture (throttled with rAF) ── */
+  const rafIdRef = useRef<number | null>(null);
+
   useEffect(() => {
     const canvas = offscreenCanvasRef.current;
     if (!canvas || !canopyConfig) return;
@@ -425,14 +427,27 @@ export function CanopyModel() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    renderSectionToCanvas(ctx, canvas.width, canvas.height, canopyConfig, () => {
-      setTextureVersion((v) => v + 1);
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+    }
+
+    rafIdRef.current = requestAnimationFrame(() => {
+      renderSectionToCanvas(ctx, canvas.width, canvas.height, canopyConfig, () => {
+        setTextureVersion((v) => v + 1);
+      });
+
+      if (canvasTextureRef.current) {
+        canvasTextureRef.current.needsUpdate = true;
+        invalidateFrame();
+      }
+      rafIdRef.current = null;
     });
 
-    if (canvasTextureRef.current) {
-      canvasTextureRef.current.needsUpdate = true;
-      invalidateFrame();
-    }
+    return () => {
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+      }
+    };
   }, [canopyConfig, invalidateFrame]);
 
   /* ── Sync: frame colour ── */
@@ -474,12 +489,13 @@ export function CanopyModel() {
   }, []);
 
   const tentBounds = useMemo(() => {
+    const widthRatio = modelVariant ? modelVariant.physicalWidthInches / 60 : 1;
     return {
-      halfWidth: 1.08,
-      halfDepth: 1.08,
+      halfWidth: 1.08 * (0.85 + 0.15 * widthRatio),
+      halfDepth: 1.08 * (0.85 + 0.15 * widthRatio),
       eavesHeight: 1.52,
     };
-  }, []);
+  }, [modelVariant]);
 
   return (
     <group>
@@ -496,3 +512,8 @@ export function CanopyModel() {
     </group>
   );
 }
+
+/* Preload all three canopy models so size switching is instantaneous */
+useGLTF.preload('/models/canopy-5x5.glb');
+useGLTF.preload('/models/canopy-6-5x6-5.glb');
+useGLTF.preload('/models/canopy-8x8.glb');

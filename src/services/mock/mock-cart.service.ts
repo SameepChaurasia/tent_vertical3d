@@ -25,27 +25,34 @@ export class MockCartService implements CartService {
     configuration: Configuration,
     quote: PriceQuote,
     variantId: string,
+    notes?: string,
   ): ShopifyCartPayload {
     const optionSummary = Object.entries(configuration.options)
       .map(([key, value]) => `${key}: ${value}`)
       .join(', ');
 
+    const properties: Record<string, string> = {
+      /* Visible to customer at checkout */
+      'Configuration': optionSummary,
+      'Price': formatCentsAsDisplay(quote.totalCents, quote.currency),
+
+      /* Hidden from customer (underscore prefix convention) */
+      '_configuration_id': configuration.configurationId,
+      '_quote_id': quote.quoteId,
+      '_quote_signature': quote.signature,
+      '_schema_version': String(configuration.schemaVersion),
+      '_preview_url': `/api/configurations/${configuration.configurationId}/preview`,
+      '_production_pdf_url': `/api/configurations/${configuration.configurationId}/pdf`,
+    };
+
+    if (notes && notes.trim().length > 0) {
+      properties['Design Notes'] = notes.trim();
+    }
+
     return {
       id: variantId,
-      quantity: 1,
-      properties: {
-        /* Visible to customer at checkout */
-        'Configuration': optionSummary,
-        'Price': formatCentsAsDisplay(quote.totalCents, quote.currency),
-
-        /* Hidden from customer (underscore prefix convention) */
-        '_configuration_id': configuration.configurationId,
-        '_quote_id': quote.quoteId,
-        '_quote_signature': quote.signature,
-        '_schema_version': String(configuration.schemaVersion),
-        '_preview_url': `/api/configurations/${configuration.configurationId}/preview`,
-        '_production_pdf_url': `/api/configurations/${configuration.configurationId}/pdf`,
-      },
+      quantity: quote.quantity ?? 1,
+      properties,
     };
   }
 

@@ -18,6 +18,8 @@ interface PdfGenerationOptions {
   configuration: Configuration;
   productDefinition: ProductDefinition;
   quote: PriceQuote;
+  /** Custom Pantone codes or printing instructions */
+  designNotes?: string;
   /** Base64 data URL of the 3D preview snapshot */
   previewSnapshot?: string;
   /** Base64 data URL of the 2D artwork canvas */
@@ -166,6 +168,25 @@ export async function generateProductionPdf(
 
   y += 2;
   addLine();
+
+  /* ── Design Notes / Printing Instructions ── */
+  if (options.designNotes && options.designNotes.trim().length > 0) {
+    checkPageBreak(30);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(40, 40, 40);
+    doc.text('Custom Printing Instructions / PMS Codes', margin, y);
+    y += 6;
+
+    doc.setFillColor(245, 245, 245);
+    doc.roundedRect(margin, y, contentWidth, 16, 2, 2, 'F');
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(60, 60, 60);
+    doc.text(options.designNotes.trim(), margin + 4, y + 6, { maxWidth: contentWidth - 8 });
+    y += 22;
+    addLine();
+  }
 
   /* ── Price Breakdown ── */
   checkPageBreak(60);

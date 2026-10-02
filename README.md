@@ -195,14 +195,14 @@ npm test          # Run all tests
 npm run test:watch  # Watch mode
 ```
 
-### Test Coverage (43 Tests, 100% Pass Rate)
+### Test Coverage (45 Tests, 100% Pass Rate)
 
 | Suite | Tests | What it verifies |
 |---|---|---|
 | `pricing-engine.test.ts` | 15 | Base price, option deltas, combination bundle overrides, extra artwork surcharges, quantity scaling, currency formatting |
 | `schema-validation.test.ts` | 10 | Zod schemas accept valid configurations and reject malformed inputs, disallowed fonts, invalid hex colors, negative quantities |
 | `embed-protocol.test.ts` | 12 | Inbound/outbound postMessage schemas, param validation, rejection of malicious/malformed cross-origin payloads |
-| `configurator-integration.test.ts` | 6 | End-to-end integration: product init, pricing delta updates, bundle discount resolution, Shopify variant resolution, cart payload generation, 2D layer history undo/redo, JSON export/import round-trip |
+| `configurator-integration.test.ts` | 8 | End-to-end integration: product init, pricing delta updates, bundle discounts, multi-model size switching, volume quantity scaling in Shopify payload, custom PMS design notes, 2D layer history undo/redo, JSON round-trip |
 
 ---
 
@@ -210,8 +210,9 @@ npm run test:watch  # Watch mode
 
 The configurator generates a production-ready A4 PDF containing:
 - Order header with configuration ID and quote ID
-- Option selections with labels
+- Option selections with labels and active model dimensions
 - Section specifications with colour swatches
+- Custom PMS Pantone printing instructions / design notes
 - Line-item price breakdown
 - Embedded 3D preview snapshot
 - Embedded 2D artwork layout
@@ -225,6 +226,8 @@ jsPDF is **lazy-loaded** — it stays out of the initial bundle and is only fetc
 | Optimisation | Impact |
 |---|---|
 | `frameloop="demand"` | Canvas only re-renders when state changes |
+| `requestAnimationFrame` Throttling | 2D→3D canvas texture repaints throttled to display refresh rate (prevents CPU bottlenecks when dragging layers) |
+| Multi-Model Preloading | `useGLTF.preload` on all 3 tent models (`5×5`, `6.5×6.5`, `8×8`) eliminates pop-in during size changes |
 | Manual Vite chunking | Three.js (~800KB) and Konva (~200KB) in separate chunks |
 | Debounced pricing | Pricing API requests are debounced by 300ms |
 | Stale request cancellation | Only the latest pricing request's response is used |

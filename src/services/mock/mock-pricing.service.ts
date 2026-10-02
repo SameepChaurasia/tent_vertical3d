@@ -38,6 +38,7 @@ export class MockPricingService implements PricingService {
       quoteId,
       signature,
       expiresAt,
+      quantity: request.quantity,
     };
   }
 }

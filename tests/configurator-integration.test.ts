@@ -212,4 +212,90 @@ describe('Configurator End-to-End Integration Flow', () => {
     expect(restored.options['side-walls']).toBe('wall-3-single');
     expect(restored.sections['canopy']?.layers).toHaveLength(1);
   });
+
+  it('handles multi-item quantity scaling and injects volume quantity into Shopify cart payload', async () => {
+    useConfiguratorStore.getState().setQuantity(4);
+    expect(useConfiguratorStore.getState().quantity).toBe(4);
+
+    const config = useConfiguratorStore.getState().configuration!;
+    const quoteReq: QuoteRequest = {
+      productId: config.productId,
+      sizeId: config.sizeId,
+      options: config.options,
+      quantity: 4,
+      customImageCount: 0,
+    };
+
+    const quote = computeQuoteLineItems(quoteReq, CANOPY_TENT_PRICING);
+    expect(quote.totalCents).toBe(84900 * 4); // $3,396.00
+
+    const priceQuote = {
+      quoteId: 'quote-qty-4',
+      productId: config.productId,
+      currency: 'USD',
+      unitPriceCents: 84900,
+      quantity: 4,
+      totalCents: quote.totalCents,
+      lineItems: quote.lineItems,
+      signature: 'mock-sig-qty4',
+      expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    };
+
+    const payload = cartService.buildCartPayload(
+      config,
+      priceQuote,
+      '48270445478136',
+    );
+
+    expect(payload.quantity).toBe(4);
+    expect(payload.properties['Price']).toBe('$3,396.00');
+
+    const result = await cartService.addToCart(payload);
+    expect(result.success).toBe(true);
+  });
+
+  it('switches canopy dimensions and embeds custom design notes / PMS instructions into cart properties', async () => {
+    /* Switch size to 8x8 */
+    useConfiguratorStore.getState().setSize('size-8x8');
+    expect(useConfiguratorStore.getState().configuration?.sizeId).toBe('size-8x8');
+
+    const model8x8 = CANOPY_TENT_PRODUCT.models['size-8x8'];
+    expect(model8x8).toBeDefined();
+    expect(model8x8?.physicalWidthInches).toBe(96);
+    expect(model8x8?.physicalHeightInches).toBe(103);
+
+    const config = useConfiguratorStore.getState().configuration!;
+    const priceQuote = {
+      quoteId: 'quote-notes-test',
+      productId: config.productId,
+      currency: 'USD',
+      unitPriceCents: 84900,
+      quantity: 1,
+      totalCents: 84900,
+      lineItems: [{ code: 'base-price', label: 'Base Product', amountCents: 84900 }],
+      signature: 'mock-sig-notes',
+      expiresAt: new Date(Date.now() + 3600000).toISOString(),
+    };
+
+    /* Build payload with custom Pantone notes */
+    const notes = 'PMS 286 Blue, align logo 2 inches above valance seam';
+    const payload = cartService.buildCartPayload(
+      config,
+      priceQuote,
+      '48270445478136',
+      notes,
+    );
+
+    expect(payload.properties['Design Notes']).toBe(notes);
+    expect(payload.properties['_configuration_id']).toBe(config.configurationId);
+
+    /* Verify empty notes are not added to payload */
+    const emptyPayload = cartService.buildCartPayload(
+      config,
+      priceQuote,
+      '48270445478136',
+      '   ',
+    );
+    expect(emptyPayload.properties['Design Notes']).toBeUndefined();
+  });
 });

@@ -19,6 +19,8 @@ export const PriceQuoteSchema = z.object({
   signature: z.string().min(1),
   /** ISO 8601 timestamp — quotes expire to prevent stale pricing */
   expiresAt: z.string().datetime(),
+  /** Optional quantity for multi-item quotes */
+  quantity: z.number().int().positive().optional(),
 });
 
 /** Pricing rule: a delta applied when a specific option choice is selected */

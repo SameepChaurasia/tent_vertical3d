@@ -26,10 +26,10 @@ This project is a production-grade, commercial 3D product configurator developed
 | **Real-time 2D ↔ 3D Sync** | Low-latency canvas texture pipeline writing to `fabric_Mat` with `flipY=false` and `SRGBColorSpace` | ✅ Exceeded |
 | **Brand Templates** | Instant 1-click presets (*Apex AI*, *Festival*, *Motorsport*) for immediate evaluation | ✅ Exceeded |
 | **Dynamic Pricing Engine** | Pure functional pricing engine operating strictly in cents; handles base price, option deltas, volume quantity, surcharges, and bundle discounts | ✅ Exceeded |
-| **Shopify Integration** | Variant map resolution, `/cart/add.js` payload generator, interactive payload inspector modal in UI | ✅ Exceeded |
-| **Production PDF Generator** | Client-side lazy-loaded jsPDF generating A4 manufacturing spec sheet with embedded 3D and 2D canvas snapshots | ✅ Exceeded |
+| **Shopify Integration** | Variant map resolution, live real-time `/cart/add.js` payload generator, volume quantity scaling, custom PMS design notes, interactive payload inspector modal in UI | ✅ Exceeded |
+| **Production PDF Generator** | Client-side lazy-loaded jsPDF generating A4 manufacturing spec sheet with embedded 3D and 2D canvas snapshots + custom printing instructions | ✅ Exceeded |
 | **Embed Mode & Security** | `?embed=1` parameter, typed bidirectional `postMessage` protocol, working merchant store demo (`embed-demo.html`), CSP headers in `vercel.json` | ✅ Exceeded |
-| **Testing & Code Quality** | **43 tests (100% pass rate)** across 4 test suites: unit tests, embed protocol tests, schema validation, and end-to-end integration tests | ✅ Exceeded |
+| **Testing & Code Quality** | **45 tests (100% pass rate)** across 4 test suites: unit tests, embed protocol tests, schema validation, and end-to-end integration tests | ✅ Exceeded |
 
 ---
 

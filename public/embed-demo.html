@@ -101,7 +101,7 @@
     <div class="embed-container">
       <iframe
         id="configurator-iframe"
-        src="http://localhost:3000/?embed=1&origin=http://localhost:3000"
+        src="/?embed=1"
         title="Tent Configurator"
         sandbox="allow-scripts allow-same-origin"
       ></iframe>
@@ -133,6 +133,11 @@
   <script>
     const iframe = document.getElementById('configurator-iframe');
     const logEl = document.getElementById('message-log');
+
+    // Ensure iframe loads from the current host dynamically
+    if (iframe) {
+      iframe.src = window.location.origin + '/?embed=1&origin=' + encodeURIComponent(window.location.origin);
+    }
 
     function addLog(direction, data) {
       const entry = document.createElement('div');

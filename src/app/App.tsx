@@ -185,24 +185,24 @@ export function App() {
 
         {/* Options + Pricing */}
         <aside
-          className={`bg-slate-950/80 p-5 overflow-y-auto border-t lg:border-t-0 lg:border-l border-white/10 flex flex-col gap-5 ${
+          className={`bg-slate-950/90 p-5 pb-28 overflow-y-auto border-t lg:border-t-0 lg:border-l border-slate-800 flex flex-col gap-4 ${
             activeTab !== 'options' ? 'hidden lg:flex' : 'flex'
           }`}
         >
-          <div className="flex flex-col gap-2 pb-5 border-b border-white/10">
-            <div className="flex items-center gap-2.5 text-xs text-slate-300">
+          <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 flex flex-col gap-2 shadow-sm">
+            <div className="flex items-center gap-2.5 text-xs text-slate-200">
               <span className="text-amber-400">⚡</span>
               <span><strong>Production:</strong> 2 Business Days</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-300">
+            <div className="flex items-center gap-2.5 text-xs text-slate-200">
               <span className="text-amber-400">🚚</span>
               <span><strong>Delivery:</strong> 5–7 Days Nationwide</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-300">
+            <div className="flex items-center gap-2.5 text-xs text-slate-200">
               <span className="text-amber-400">🏷️</span>
               <span><strong>Wholesale:</strong> Volume Tier Pricing</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-300">
+            <div className="flex items-center gap-2.5 text-xs text-slate-200">
               <span className="text-amber-400">✨</span>
               <span><strong>No Minimums:</strong> Free Digital Proofs</span>
             </div>

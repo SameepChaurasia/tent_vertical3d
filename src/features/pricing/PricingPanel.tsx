@@ -86,13 +86,16 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
   }, [fetchQuote]);
 
   return (
-    <div className="p-4 border-t border-white/10 bg-white/[0.01] flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-[11px] font-bold tracking-wider text-slate-400 uppercase">Price Breakdown</h3>
+    <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-4 shadow-sm space-y-3">
+      <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <h3 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+          <span>💳</span>
+          <span>Price Breakdown</span>
+        </h3>
         {isLoading && (
           <span className="inline-flex items-center gap-1.5 text-[10px] text-amber-400 font-mono">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-            Updating…
+            Recalculating…
           </span>
         )}
       </div>
@@ -111,20 +114,20 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
 
       {quote && (
         <div className={`flex flex-col gap-2 transition-opacity duration-200 ${isLoading ? 'opacity-60' : 'opacity-100'}`}>
-          <ul className="flex flex-col gap-1.5">
+          <ul className="flex flex-col gap-2">
             {quote.lineItems.map((item, index) => (
               <li key={`${item.code}-${index}`} className="flex items-center justify-between text-xs text-slate-300">
                 <span className="text-slate-400">{item.label}</span>
-                <span className={`font-mono tabular-nums ${item.amountCents < 0 ? 'text-emerald-400 font-medium' : 'text-slate-200'}`}>
+                <span className={`font-mono font-medium tabular-nums ${item.amountCents < 0 ? 'text-emerald-400' : 'text-slate-200'}`}>
                   {item.amountCents < 0 ? '−' : ''}
                   {formatCentsAsDisplay(Math.abs(item.amountCents), quote.currency)}
                 </span>
               </li>
             ))}
           </ul>
-          <div className="flex items-center justify-between pt-3 mt-1 border-t border-white/10 text-sm font-bold text-white">
-            <span className="tracking-wide">Estimated Total</span>
-            <span className="font-mono text-lg text-amber-400 tracking-tight tabular-nums">
+          <div className="flex items-center justify-between pt-3 mt-1 border-t border-slate-800 text-sm font-bold text-white">
+            <span className="tracking-wide">Estimated Subtotal</span>
+            <span className="font-mono text-xl text-amber-400 tracking-tight tabular-nums">
               {formatCentsAsDisplay(quote.totalCents, quote.currency)}
             </span>
           </div>
@@ -133,9 +136,9 @@ export function PricingPanel({ pricingService, onQuoteReady }: PricingPanelProps
 
       {isLoading && !quote && (
         <div className="flex flex-col gap-2 animate-pulse py-2">
-          <div className="h-4 bg-white/5 rounded w-3/4" />
-          <div className="h-4 bg-white/5 rounded w-1/2" />
-          <div className="h-6 bg-white/10 rounded w-full mt-2" />
+          <div className="h-4 bg-slate-800 rounded w-3/4" />
+          <div className="h-4 bg-slate-800 rounded w-1/2" />
+          <div className="h-6 bg-slate-800 rounded w-full mt-2" />
         </div>
       )}
     </div>

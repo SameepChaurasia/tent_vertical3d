@@ -136,24 +136,25 @@ function ViewerScene({
         <ViewerDimensions visible={showDimensions} />
       </Suspense>
 
+      {/* Seamless Studio Ground & Shadow receiver */}
       <ContactShadows
         position={[0, -0.01, 0]}
-        opacity={isNightMode ? 0.6 : 0.4}
-        scale={8}
-        blur={2.2}
-        far={4}
+        opacity={isNightMode ? 0.7 : 0.45}
+        scale={10}
+        blur={2.5}
+        far={4.5}
       />
 
-      {/* Ground plane for context */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -0.02, 0]}
+        position={[0, -0.015, 0]}
         receiveShadow
       >
-        <planeGeometry args={[20, 20]} />
+        <planeGeometry args={[60, 60]} />
         <meshStandardMaterial
-          color={isNightMode ? '#14141e' : '#e8e8e8'}
-          roughness={0.9}
+          color={isNightMode ? '#0a0d14' : '#11151f'}
+          roughness={0.95}
+          metalness={0.05}
         />
       </mesh>
     </>
@@ -210,76 +211,50 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
         ref={containerRef}
         className={`viewer-3d-container relative w-full h-full ${isNightMode ? 'viewer-night-mode' : ''} ${className ?? ''}`}
       >
-        {/* Floating Camera & Viewer Toolbar */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 p-1.5 bg-slate-950/85 backdrop-blur-md border border-white/15 rounded-full shadow-2xl z-10" role="toolbar" aria-label="3D Viewer Controls">
+        {/* Floating Camera & Viewer Toolbar - Never wraps, distinct borders */}
+        <div 
+          className="absolute top-3 left-1/2 -translate-x-1/2 max-w-[96%] overflow-x-auto no-scrollbar flex items-center gap-1.5 p-1.5 bg-slate-900/90 backdrop-blur-xl border border-slate-700/80 rounded-full shadow-2xl z-10 whitespace-nowrap"
+          role="toolbar" 
+          aria-label="3D Viewer Controls"
+        >
           {/* Camera Angles */}
-          <div className="flex items-center gap-1">
-            <button
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                activePreset === 'front'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-              onClick={() => setActivePreset('front')}
-              title="Front View"
-            >
-              Front
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                activePreset === 'isometric'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-              onClick={() => setActivePreset('isometric')}
-              title="Isometric 3D View"
-            >
-              3D Iso
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                activePreset === 'side'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-              onClick={() => setActivePreset('side')}
-              title="Side View"
-            >
-              Side
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                activePreset === 'back'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-              onClick={() => setActivePreset('back')}
-              title="Back View"
-            >
-              Back
-            </button>
-            <button
-              className={`px-3 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer ${
-                activePreset === 'top'
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
-              }`}
-              onClick={() => setActivePreset('top')}
-              title="Top View"
-            >
-              Top
-            </button>
+          <div className="flex items-center gap-1 shrink-0">
+            {(
+              [
+                { id: 'isometric', label: '3D Iso' },
+                { id: 'front', label: 'Front' },
+                { id: 'side', label: 'Side' },
+                { id: 'back', label: 'Back' },
+                { id: 'top', label: 'Top' },
+              ] as const
+            ).map((angle) => {
+              const isSelected = activePreset === angle.id;
+              return (
+                <button
+                  key={angle.id}
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer border ${
+                    isSelected
+                      ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-500/30'
+                      : 'text-slate-300 hover:text-white hover:bg-slate-800 border-transparent'
+                  }`}
+                  onClick={() => setActivePreset(angle.id)}
+                  title={`${angle.label} View`}
+                >
+                  {angle.label}
+                </button>
+              );
+            })}
           </div>
 
-          <div className="w-[1px] h-4 bg-white/20 mx-1" />
+          <div className="w-[1px] h-4 bg-slate-700 shrink-0 mx-0.5" />
 
           {/* Interactive Feature Toggles */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 shrink-0">
             <button
-              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1 border ${
                 showHotspots
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800 border-transparent'
               }`}
               onClick={() => setShowHotspots((prev) => !prev)}
               title="Toggle Feature Hotspots"
@@ -287,10 +262,10 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
               <span>📍</span> Hotspots
             </button>
             <button
-              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1 border ${
                 showDimensions
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800 border-transparent'
               }`}
               onClick={() => setShowDimensions((prev) => !prev)}
               title="Toggle 3D Dimensions"
@@ -298,10 +273,10 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
               <span>📏</span> Measure
             </button>
             <button
-              className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1 border ${
                 isNightMode
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                  : 'text-slate-300 hover:text-white hover:bg-white/10'
+                  ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-500/30'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800 border-transparent'
               }`}
               onClick={() => setIsNightMode((prev) => !prev)}
               title="Toggle Night Mode with Interior LED Illumination"
@@ -310,14 +285,14 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             </button>
           </div>
 
-          <div className="w-[1px] h-4 bg-white/20 mx-1" />
+          <div className="w-[1px] h-4 bg-slate-700 shrink-0 mx-0.5" />
 
           {/* Turntable Auto-rotate */}
           <button
-            className={`px-2.5 py-1 text-xs font-semibold rounded-full transition-all cursor-pointer flex items-center gap-1 ${
+            className={`px-2.5 py-1 text-xs font-semibold rounded-full whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1 border ${
               isAutoRotating
-                ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/30'
-                : 'text-slate-300 hover:text-white hover:bg-white/10'
+                ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-md shadow-amber-500/30'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800 border-transparent'
             }`}
             onClick={() => setIsAutoRotating((prev) => !prev)}
             title="Toggle 360° Turntable Rotation"
@@ -328,11 +303,11 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
             360°
           </button>
 
-          <div className="w-[1px] h-4 bg-white/20 mx-1" />
+          <div className="w-[1px] h-4 bg-slate-700 shrink-0 mx-0.5" />
 
           {/* Lighting Mode Selector */}
           <select
-            className="px-2.5 py-1 text-xs font-medium rounded-full bg-white/10 border border-white/15 text-slate-200 outline-none cursor-pointer hover:bg-white/15"
+            className="px-2.5 py-1 text-xs font-medium rounded-full bg-slate-800 border border-slate-700 text-slate-200 outline-none cursor-pointer hover:bg-slate-700 shrink-0 whitespace-nowrap"
             value={envPreset}
             onChange={(e) => setEnvPreset(e.target.value as EnvironmentType)}
             title="Environment Lighting"
@@ -347,7 +322,7 @@ const ConfiguratorCanvasInner = forwardRef<ViewerHandle, ConfiguratorCanvasProps
 
         {/* Floating Snapshot Button */}
         <button
-          className="absolute bottom-4 right-4 flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-slate-950/85 backdrop-blur-md border border-white/15 rounded-full shadow-xl hover:bg-amber-500 hover:text-slate-950 hover:-translate-y-0.5 transition-all z-10 cursor-pointer"
+          className="absolute bottom-4 right-4 flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-white bg-slate-900/90 backdrop-blur-md border border-slate-700 rounded-full shadow-xl hover:bg-amber-500 hover:text-slate-950 hover:border-amber-400 hover:-translate-y-0.5 transition-all z-10 cursor-pointer"
           onClick={handleDownloadSnapshot}
           title="Download High-Res 3D Snapshot"
         >

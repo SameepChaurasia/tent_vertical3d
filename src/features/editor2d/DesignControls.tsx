@@ -185,20 +185,20 @@ export function DesignControls() {
   ];
 
   return (
-    <div className="p-4 space-y-5 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
+    <div className="p-4 space-y-4 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center gap-2 pb-4 border-b border-white/10">
+      <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-slate-800">
         <button
-          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-300 border border-amber-500/40 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer whitespace-nowrap"
           onClick={handleAddText}
           title="Add Text"
         >
-          <span className="text-base font-bold leading-none">T</span>
+          <span className="text-sm font-bold leading-none">T</span>
           <span>Add Text</span>
         </button>
 
         <button
-          className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded-lg bg-amber-500/15 text-amber-400 border border-amber-500/30 hover:bg-amber-500 hover:text-slate-950 transition-all shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800/80 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all shadow-sm cursor-pointer whitespace-nowrap"
           onClick={() => fileInputRef.current?.click()}
           title="Upload Image"
         >
@@ -215,10 +215,10 @@ export function DesignControls() {
           aria-label="Upload artwork image"
         />
 
-        <div className="h-6 w-[1px] bg-white/10 mx-1" />
+        <div className="h-5 w-[1px] bg-slate-700 mx-1" />
 
         <button
-          className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+          className="w-7 h-7 flex items-center justify-center text-xs font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
           onClick={undo}
           disabled={!canUndo}
           title="Undo (Ctrl+Z)"
@@ -226,7 +226,7 @@ export function DesignControls() {
           ↶
         </button>
         <button
-          className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-white/5 border border-white/10 text-slate-300 hover:bg-white/10 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+          className="w-7 h-7 flex items-center justify-center text-xs font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
           onClick={redo}
           disabled={!canRedo}
           title="Redo (Ctrl+Shift+Z)"
@@ -242,17 +242,23 @@ export function DesignControls() {
         </div>
       )}
 
-      {/* Base colour picker */}
-      <div className="space-y-3 pb-4 border-b border-white/10">
-        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Base Color</h4>
+      {/* Base colour picker card */}
+      <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-3 shadow-sm">
+        <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+          <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+            <span>🎨</span>
+            <span>Base Fabric Color</span>
+          </h4>
+          <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig?.baseColor ?? '#F5A623'}</span>
+        </div>
         <div className="flex flex-wrap gap-2">
           {colorSwatches.map((color) => {
             const isSelected = sectionConfig?.baseColor?.toLowerCase() === color.toLowerCase();
             return (
               <button
                 key={color}
-                className={`w-7 h-7 rounded-md border border-white/15 cursor-pointer transition-all hover:scale-110 shadow-sm relative focus:outline-none ${
-                  isSelected ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-950 border-white scale-105' : ''
+                className={`w-7 h-7 rounded-md border-2 border-slate-700/80 cursor-pointer transition-all hover:scale-110 shadow-sm relative focus:outline-none ${
+                  isSelected ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-110 shadow-md' : ''
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => setSectionBaseColor(sectionId, color)}
@@ -261,8 +267,8 @@ export function DesignControls() {
             );
           })}
         </div>
-        <div className="flex items-center gap-2 text-xs text-slate-400">
-          <label htmlFor="base-color-hex" className="font-medium">Hex:</label>
+        <div className="flex items-center gap-2 text-xs text-slate-400 pt-1">
+          <label htmlFor="base-color-hex" className="font-semibold text-slate-300">Custom Hex:</label>
           <input
             id="base-color-hex"
             type="text"
@@ -274,17 +280,23 @@ export function DesignControls() {
             }}
             maxLength={9}
             pattern="^#[0-9a-fA-F]{3,8}$"
-            className="w-24 px-2 py-1 text-xs font-mono bg-slate-950/80 border border-white/10 rounded-md text-white focus:outline-none focus:border-amber-400"
+            className="w-28 px-2.5 py-1 text-xs font-mono bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
           />
         </div>
       </div>
 
-      {/* Brand Templates / Presets */}
-      <div className="space-y-3 pb-4 border-b border-white/10">
-        <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Brand Templates</h4>
+      {/* Brand Templates / Presets card */}
+      <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-2.5 shadow-sm">
+        <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+          <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+            <span>✨</span>
+            <span>Brand Templates</span>
+          </h4>
+          <span className="text-[10px] text-amber-400 font-semibold">1-Click Styles</span>
+        </div>
         <div className="flex flex-wrap gap-2">
           <button
-            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#0F172A');
               setSectionBaseColor('frame', '#334155');
@@ -302,7 +314,7 @@ export function DesignControls() {
             <span>⚡</span> Apex AI
           </button>
           <button
-            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#EA580C');
               setSectionBaseColor('frame', '#E2E8F0');
@@ -320,7 +332,7 @@ export function DesignControls() {
             <span>🔥</span> Festival
           </button>
           <button
-            className="px-3 py-1.5 text-xs font-medium rounded-full bg-white/5 border border-white/10 text-slate-300 hover:border-amber-400/50 hover:bg-amber-500/10 hover:text-amber-300 hover:-translate-y-0.5 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 border border-slate-700 text-slate-200 hover:border-amber-400 hover:bg-amber-500/10 hover:text-amber-300 transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
             onClick={() => {
               setSectionBaseColor('canopy', '#18181B');
               setSectionBaseColor('frame', '#DC2626');
@@ -342,12 +354,13 @@ export function DesignControls() {
 
       {/* Selected layer properties */}
       {selectedLayer && (
-        <div className="space-y-3.5 p-3.5 bg-slate-950/50 border border-white/10 rounded-xl">
-          <div className="flex items-center justify-between">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-amber-400">
-              {selectedLayer.kind === 'text' ? 'Text Layer Settings' : 'Image Layer Settings'}
+        <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-3.5 shadow-sm">
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-400 uppercase">
+              <span>🎛️</span>
+              <span>{selectedLayer.kind === 'text' ? 'Text Layer Settings' : 'Image Layer Settings'}</span>
             </h4>
-            <span className="text-[10px] font-mono text-slate-400 bg-white/5 px-2 py-0.5 rounded border border-white/5">
+            <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
               ID: {selectedLayer.id.slice(0, 6)}
             </span>
           </div>
@@ -355,7 +368,7 @@ export function DesignControls() {
           {selectedLayer.kind === 'text' && (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <label htmlFor="text-content" className="text-xs text-slate-400 w-14 shrink-0">Text:</label>
+                <label htmlFor="text-content" className="text-xs text-slate-300 font-medium w-14 shrink-0">Text:</label>
                 <input
                   id="text-content"
                   type="text"
@@ -366,12 +379,12 @@ export function DesignControls() {
                     })
                   }
                   maxLength={200}
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400"
+                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
                 />
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-font" className="text-xs text-slate-400 w-14 shrink-0">Font:</label>
+                <label htmlFor="text-font" className="text-xs text-slate-300 font-medium w-14 shrink-0">Font:</label>
                 <select
                   id="text-font"
                   value={selectedLayer.fontFamily}
@@ -380,10 +393,10 @@ export function DesignControls() {
                       fontFamily: e.target.value as typeof selectedLayer.fontFamily,
                     })
                   }
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white focus:outline-none focus:border-amber-400"
+                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
                 >
                   {ALLOWED_FONT_FAMILIES.map((font) => (
-                    <option key={font} value={font}>
+                    <option key={font} value={font} className="bg-slate-900 text-white">
                       {font}
                     </option>
                   ))}
@@ -391,7 +404,7 @@ export function DesignControls() {
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-size" className="text-xs text-slate-400 w-14 shrink-0">Size:</label>
+                <label htmlFor="text-size" className="text-xs text-slate-300 font-medium w-14 shrink-0">Size:</label>
                 <input
                   id="text-size"
                   type="number"
@@ -403,13 +416,13 @@ export function DesignControls() {
                   }
                   min={8}
                   max={200}
-                  className="w-20 px-2.5 py-1.5 text-xs bg-slate-900 border border-white/10 rounded-lg text-white font-mono focus:outline-none focus:border-amber-400"
+                  className="w-20 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white font-mono focus:outline-none focus:border-amber-400"
                 />
-                <span className="text-[11px] text-slate-500">pt</span>
+                <span className="text-[11px] text-slate-400">pt</span>
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-color" className="text-xs text-slate-400 w-14 shrink-0">Color:</label>
+                <label htmlFor="text-color" className="text-xs text-slate-300 font-medium w-14 shrink-0">Color:</label>
                 <div className="flex items-center gap-2">
                   <input
                     id="text-color"
@@ -418,15 +431,15 @@ export function DesignControls() {
                     onChange={(e) =>
                       updateLayer(sectionId, selectedLayer.id, { fill: e.target.value })
                     }
-                    className="w-8 h-8 rounded border border-white/15 cursor-pointer bg-transparent"
+                    className="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent"
                   />
                   <span className="text-xs font-mono text-slate-300">{selectedLayer.fill.toUpperCase()}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-400 w-14 shrink-0">Align:</span>
-                <div className="flex items-center gap-1 bg-slate-900 p-1 border border-white/10 rounded-lg">
+                <span className="text-xs text-slate-300 font-medium w-14 shrink-0">Align:</span>
+                <div className="flex items-center gap-1 bg-slate-950 p-1 border border-slate-700 rounded-lg">
                   {(['left', 'center', 'right'] as const).map((align) => (
                     <button
                       key={align}
@@ -447,7 +460,7 @@ export function DesignControls() {
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-opacity" className="text-xs text-slate-400 w-14 shrink-0">Opacity:</label>
+                <label htmlFor="text-opacity" className="text-xs text-slate-300 font-medium w-14 shrink-0">Opacity:</label>
                 <input
                   id="text-opacity"
                   type="range"
@@ -459,7 +472,7 @@ export function DesignControls() {
                       opacity: Number(e.target.value) / 100,
                     })
                   }
-                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
                 <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
                   {Math.round(selectedLayer.opacity * 100)}%
@@ -471,7 +484,7 @@ export function DesignControls() {
           {selectedLayer.kind === 'image' && (
             <div className="space-y-3">
               <div className="flex items-center gap-3">
-                <label htmlFor="image-opacity" className="text-xs text-slate-400 w-14 shrink-0">Opacity:</label>
+                <label htmlFor="image-opacity" className="text-xs text-slate-300 font-medium w-14 shrink-0">Opacity:</label>
                 <input
                   id="image-opacity"
                   type="range"
@@ -483,7 +496,7 @@ export function DesignControls() {
                       opacity: Number(e.target.value) / 100,
                     })
                   }
-                  className="flex-1 h-1.5 bg-white/10 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
                 <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
                   {Math.round(selectedLayer.opacity * 100)}%
@@ -492,15 +505,15 @@ export function DesignControls() {
             </div>
           )}
 
-          <div className="flex items-center gap-2 pt-2 border-t border-white/10">
+          <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
             <button
-              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/30 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center"
+              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/40 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center"
               onClick={handleDeleteSelected}
             >
               🗑️ Delete Layer
             </button>
             <button
-              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-white/5 text-slate-200 border border-white/10 hover:bg-white/10 hover:text-white transition-all cursor-pointer text-center"
+              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white transition-all cursor-pointer text-center"
               onClick={handleDuplicateSelected}
             >
               📋 Duplicate
@@ -509,12 +522,15 @@ export function DesignControls() {
         </div>
       )}
 
-      {/* Layer list */}
+      {/* Layer list card */}
       {sectionConfig && sectionConfig.layers.length > 0 && (
-        <div className="space-y-2.5">
-          <div className="flex items-center justify-between">
-            <h4 className="text-[11px] font-bold uppercase tracking-wider text-slate-400">Active Layers</h4>
-            <span className="text-[10px] font-mono text-slate-500">{sectionConfig.layers.length} items</span>
+        <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-2.5 shadow-sm">
+          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
+            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+              <span>📑</span>
+              <span>Active Artwork Layers</span>
+            </h4>
+            <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig.layers.length} items</span>
           </div>
           <ul className="space-y-1.5">
             {[...sectionConfig.layers].reverse().map((layer) => {
@@ -522,14 +538,14 @@ export function DesignControls() {
               return (
                 <li
                   key={layer.id}
-                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg border transition-all cursor-pointer ${
+                  className={`flex items-center gap-2.5 px-3 py-2 rounded-lg border-2 transition-all cursor-pointer ${
                     isSelected
-                      ? 'bg-amber-500/15 border-amber-500/50 text-amber-200 shadow-sm'
-                      : 'bg-white/5 border-white/5 hover:bg-white/10 hover:border-white/10 text-slate-300'
+                      ? 'bg-amber-500/15 border-amber-400 text-amber-200 shadow-sm'
+                      : 'bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600'
                   }`}
                   onClick={() => selectLayer(layer.id)}
                 >
-                  <span className="w-5 text-center text-sm font-bold opacity-80">
+                  <span className="w-5 text-center text-sm font-bold opacity-90">
                     {layer.kind === 'text' ? 'T' : '🖼'}
                   </span>
                   <span className="flex-1 text-xs font-medium truncate">
@@ -538,7 +554,7 @@ export function DesignControls() {
                       : 'Artwork Image'}
                   </span>
                   <button
-                    className="p-1 text-xs opacity-60 hover:opacity-100 transition-opacity cursor-pointer"
+                    className="p-1 text-xs opacity-70 hover:opacity-100 transition-opacity cursor-pointer text-slate-400 hover:text-white"
                     onClick={(e) => {
                       e.stopPropagation();
                       updateLayer(sectionId, layer.id, { visible: !layer.visible });

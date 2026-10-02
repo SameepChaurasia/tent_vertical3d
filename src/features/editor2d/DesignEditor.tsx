@@ -192,28 +192,46 @@ export function DesignEditor() {
   }
 
   return (
-    <div className="editor-2d-container">
-      <div className="editor-2d-section-tabs">
-        {visibleSections.map((section) => (
-          <button
-            key={section.id}
-            className={`editor-2d-tab ${
-              activeSectionId === section.id ? 'editor-2d-tab-active' : ''
-            }`}
-            onClick={() => useConfiguratorStore.getState().setActiveSection(section.id)}
-          >
-            {section.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="editor-2d-artboard-card">
-        <div className="artboard-card-header">
-          <div className="artboard-title-group">
-            <span className="artboard-dot" />
-            <span className="artboard-title">PRINT UNWRAP CANVAS</span>
+    <div className="flex flex-col p-4 gap-3">
+      {/* Surface switcher — ONLY shown when multiple surfaces (walls) are selected */}
+      {visibleSections.length > 1 && (
+        <div className="flex flex-col gap-1.5 p-2 bg-slate-900/80 border border-slate-700 rounded-xl">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 px-1">
+            🎨 Design Surface
+          </span>
+          <div className="flex gap-1.5">
+            {visibleSections.map((section) => {
+              const isSelected = activeSectionId === section.id;
+              return (
+                <button
+                  key={section.id}
+                  className={`flex-1 py-1.5 px-3 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${
+                    isSelected
+                      ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-sm'
+                      : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:text-white hover:border-slate-700'
+                  }`}
+                  onClick={() => useConfiguratorStore.getState().setActiveSection(section.id)}
+                >
+                  {section.id === 'canopy' ? '⛺ Roof Canopy' : `🧱 ${section.label}`}
+                </button>
+              );
+            })}
           </div>
-          <span className="artboard-dim-badge">2048 × 2048 MASTER</span>
+        </div>
+      )}
+
+      {/* Artboard Card */}
+      <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 shadow-md">
+        <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-800">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">
+              {activeSectionId === 'canopy' ? '⛺ ROOF & VALANCE CANVAS' : '🧱 PRINT SURFACE CANVAS'}
+            </span>
+          </div>
+          <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/25 px-2 py-0.5 rounded">
+            2048 × 2048 MASTER
+          </span>
         </div>
         <div className="editor-2d-canvas-wrapper">
           <Stage

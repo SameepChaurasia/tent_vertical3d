@@ -1,6 +1,39 @@
-# 10×10 Logo Canopy Tent — Product Configurator
+# 10×10 Logo Canopy Tent — Commercial 3D Product Configurator
 
-A production-grade 3D product configurator built with **React**, **Three.js (R3F)**, **TypeScript (strict)**, and a data-driven architecture designed to support _any_ configurable product.
+A production-grade, commercial 3D product configurator built with **React 19**, **Three.js (R3F r186)**, **TypeScript 6 (strict)**, **Tailwind CSS v4**, and a data-driven architecture designed to support _any_ configurable commercial product.
+
+---
+
+## ✨ Key Features & Capabilities
+
+- **Dual Studio Layout Modes**:
+  - **Studio View**: Balanced 2-column layout with tabbed 2D Graphic Design Studio and Product Options.
+  - **3-Column Pro**: Desktop widescreen workflow showing 3D Canvas, 2D Graphic Design Studio, and Product Options & Live Price Breakdown simultaneously.
+- **Calibrated CAD Template & Face Notations**:
+  - Exact UV unwrapped polygon boundaries matching the 3D tent geometry.
+  - Clear visual notations: `▼ FRONT FACE (3D FRONT)`, `FRONT VALANCE`, `▲ BACK FACE`, `BACK VALANCE`, `◀ LEFT FACE`, `RIGHT FACE ▶`, and central `▲ PEAK` crosshair marker.
+- **1-Click "Snap to Tent Panel" Alignment**:
+  - Instant precision alignment buttons in the layer inspector: `🎯 Front Face`, `📐 Valance`, `🔄 Back Face`, `◀ Left Face`, and `▶ Right Face`.
+- **Synchronous Live 3D Texture Synchronization**:
+  - Instantaneous updates when changing fabric base colors, adding text, adjusting typography, or moving layers.
+- **3D Viewer Controls**:
+  - 5 Camera presets: 3D Isometric, Front, Side, Back, and Top view.
+  - 360° Turntable rotation mode.
+  - 3D Interactive Feature Hotspots (Commercial 600D fabric, aircraft aluminum truss, telescopic hex legs).
+  - Real-world 3D dimensional measurement callout overlays (10' width, 7'2" clearance, 11'2" peak).
+  - Lighting controls: Studio Daylight vs. Evening Night LED Chandelier Mode.
+- **Procedural 3D Walls & Frame Toggle**:
+  - Procedurally generated 1 Back Wall, 3 Full Walls, and 2 Half Walls with brushed aluminum clamp rails.
+  - Smooth *"Canopy Only (No Frame)"* toggle retaining canopy fabric while hiding the structural frame.
+- **Pure Dynamic Pricing Engine**:
+  - Integer cent arithmetic ($849 base, volume tier scaling, option deltas, bundle discounts).
+- **Shopify & Commercial Export**:
+  - Live Shopify `/cart/add.js` payload generator with real-time JSON inspector modal.
+  - Lazy-loaded client-side A4 Manufacturing Spec Sheet PDF generator with embedded 3D/2D snapshots.
+  - Iframe embed mode (`?embed=1`) with typed bidirectional `postMessage` protocol (`public/embed-demo.html`).
+- **Comprehensive Testing**:
+  - **45 tests (100% pass rate)** across 4 test suites in Vitest.
+  - Zero TypeScript errors (`npx tsc --noEmit`) and zero ESLint warnings (`npm run lint`).
 
 ---
 
@@ -55,6 +88,7 @@ graph LR
 | **Zod schemas as source of truth** | Runtime validation + TypeScript types from one declaration |
 | **Material matching by name** | GLB models have inconsistent material index ordering across sizes |
 | **`texture.flipY = false`** | Required for glTF UV convention; otherwise texture appears inverted |
+| **Synchronous CanvasTexture in useMemo** | Eliminates async delay when updating colors or text on 3D mesh |
 | **Pure pricing engine** | Same function runs client-side (tests) and server-side (Vercel function) |
 | **HMAC-signed quotes** | Prevents client-side price tampering before cart submission |
 | **Normalised coordinates (0–1)** | Design layers work across different canvas/texture resolutions |
@@ -268,12 +302,13 @@ The architecture is **product-agnostic by design** — all UI behaviour derives 
 |---|---|---|
 | React | 19.x | UI framework |
 | TypeScript | 6.x (strict) | Type safety with `noUncheckedIndexedAccess` |
-| Three.js | 0.186 | 3D rendering engine |
-| @react-three/fiber | 9.x | React renderer for Three.js |
+| Three.js | 0.186 | 3D WebGL rendering engine |
+| @react-three/fiber | 9.x | Declarative React renderer for Three.js |
 | @react-three/drei | 10.x | R3F helpers (OrbitControls, Environment, etc.) |
-| Zustand + Immer | 5.x | State management with immutable updates |
-| Zod | 4.x | Runtime schema validation → TS types |
-| Konva + react-konva | 10.x / 19.x | 2D canvas editor |
-| jsPDF | 4.x | PDF generation (lazy-loaded) |
-| Vite | 8.x | Build tool with HMR |
-| Vitest | 5.x | Unit testing |
+| Tailwind CSS | 4.x | Modern CSS styling & responsive design system |
+| Zustand + Immer | 5.x / 11.x | State management with immutable draft mutations |
+| Zod | 4.x | Runtime schema validation → TypeScript types |
+| Konva + react-konva | 10.x / 19.x | High-performance 2D canvas editor |
+| jsPDF | 4.x | Client-side A4 PDF generation (lazy-loaded) |
+| Vite | 8.x | Lightning-fast build tool & dev server |
+| Vitest | 5.x | Automated unit & integration testing |

@@ -5,7 +5,7 @@
 **Candidate:** Assessment Submission  
 **Role:** Three.js / Frontend Technical Assessment  
 **Reference Link:** [MVP Visuals 10×10 Custom Canopy Tent](https://mvpvisuals.com/products/10x10-custom-canopy-tent)  
-**Tech Stack:** React 19 · Three.js (@react-three/fiber + @react-three/drei) · TypeScript (Strict) · Konva (react-konva) · Zustand + Immer · Zod · jsPDF · Vite 8 · Vitest
+**Tech Stack:** React 19 · Three.js (@react-three/fiber + @react-three/drei r186) · TypeScript (Strict) · Tailwind CSS v4 · Konva (react-konva) · Zustand + Immer · Zod · jsPDF · Vite 8 · Vitest
 
 ---
 
@@ -15,15 +15,16 @@ This project is a production-grade, commercial 3D product configurator developed
 
 | Assessment Requirement | Implementation & Architectural Delivery | Status |
 |---|---|:---:|
-| **Replicate Reference UI** | Options layout, pill selectors, real-time pricing breakdown, bottom sticky checkout bar, and dark studio aesthetic | ✅ Exceeded |
+| **Replicate Reference UI** | Options layout, pill selectors, real-time pricing breakdown, bottom sticky checkout bar, dual layout modes (Studio View & 3-Column Pro Widescreen), and modern dark studio aesthetic with Tailwind CSS v4 | ✅ Exceeded |
 | **Three.js 3D Viewer** | Loads GLB models (`5x5`, `6.5x6.5`, `8x8`), names-based material mapping, OrbitControls, contact shadows, ground plane, 5 camera angle presets, 360° turntable, lighting modes | ✅ Exceeded |
 | **Procedural 3D Walls** | Dynamic generation of 1 Back Wall, 3 Walls (Back + Left + Right), and 2 Half Walls with aluminum support clamp rails matching catalog options | ✅ Exceeded |
 | **Frame Toggle** | Selecting *"Canopy Only (No Frame)"* smoothly toggles frame visibility while preserving the canopy top | ✅ Exceeded |
 | **3D Feature Hotspots** | Interactive 3D pinned feature cards with pulse animations explaining fabric grade, aircraft-grade truss, and telescopic legs | ✅ Exceeded |
 | **3D Measurement Callouts** | Real-world dimensional overlay lines showing 10' width, 7'2" clearance, and 11'2" peak height | ✅ Exceeded |
 | **Night LED Illumination** | Night market / evening mode with warm interior ceiling LED chandelier lighting and dusk environment gradient | ✅ Exceeded |
-| **2D Canvas Design Editor** | Konva-powered canvas with text layers, Google Fonts, magic-byte validated image uploads, region guide wireframes, drag, rotate, scale | ✅ Exceeded |
-| **Real-time 2D ↔ 3D Sync** | Low-latency canvas texture pipeline writing to `fabric_Mat` with `flipY=false` and `SRGBColorSpace` | ✅ Exceeded |
+| **2D Canvas Design Editor** | Konva-powered canvas with calibrated CAD face unwraps, bold panel notations (`▼ FRONT FACE`, `▲ BACK FACE`, `VALANCE`, `▲ PEAK`), text layers, Google Fonts, magic-byte validated image uploads | ✅ Exceeded |
+| **1-Click Precision Snapping** | Quick face alignment buttons (`🎯 Front Face`, `📐 Valance`, `🔄 Back Face`, `◀ Left Face`, `▶ Right Face`) for instant mathematical layer alignment | ✅ Exceeded |
+| **Real-time 2D ↔ 3D Sync** | Synchronous canvas texture pipeline (`CanvasTexture` in `useMemo` with `flipY=false` and `SRGBColorSpace`) providing zero-latency live visual sync on color & layer updates | ✅ Exceeded |
 | **Brand Templates** | Instant 1-click presets (*Apex AI*, *Festival*, *Motorsport*) for immediate evaluation | ✅ Exceeded |
 | **Dynamic Pricing Engine** | Pure functional pricing engine operating strictly in cents; handles base price, option deltas, volume quantity, surcharges, and bundle discounts | ✅ Exceeded |
 | **Shopify Integration** | Variant map resolution, live real-time `/cart/add.js` payload generator, volume quantity scaling, custom PMS design notes, interactive payload inspector modal in UI | ✅ Exceeded |

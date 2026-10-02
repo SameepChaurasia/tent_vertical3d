@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shopify Merchant Store — Embed Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .store-header {
+      background: #1a1a2e;
+      color: white;
+      padding: 16px 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .store-header h1 { font-size: 1.2rem; font-weight: 700; }
+    .store-header nav a { color: #a0a0a0; margin-left: 24px; text-decoration: none; }
+    .product-page {
+      max-width: 1200px;
+      margin: 32px auto;
+      padding: 0 32px;
+    }
+    .product-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .embed-container {
+      width: 100%;
+      height: 700px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #0f0f0f;
+    }
+    .embed-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .message-log {
+      margin-top: 24px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      padding: 16px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+    .message-log h3 { color: #f5a623; font-size: 0.9rem; margin-bottom: 12px; }
+    .log-entry {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: #22c55e;
+      margin-bottom: 4px;
+      padding: 4px 8px;
+      background: rgba(34, 197, 94, 0.05);
+      border-radius: 4px;
+    }
+    .log-entry.outbound { color: #3498db; background: rgba(52, 152, 219, 0.05); }
+    .parent-controls {
+      margin-top: 24px;
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      border: 1px solid #ddd;
+    }
+    .parent-controls h3 { font-size: 0.9rem; margin-bottom: 12px; color: #666; }
+    .parent-controls button {
+      padding: 8px 16px;
+      margin-right: 8px;
+      margin-bottom: 8px;
+      background: #1a1a2e;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .parent-controls button:hover { background: #2a2a4e; }
+  </style>
+</head>
+<body>
+  <header class="store-header">
+    <h1>🏪 Acme Custom Products (Demo Merchant Store)</h1>
+    <nav>
+      <a href="#">Shop</a>
+      <a href="#">About</a>
+      <a href="#">Cart (0)</a>
+    </nav>
+  </header>
+
+  <main class="product-page">
+    <h2 class="product-title">Custom 10x10 Logo Canopy Tent</h2>
+
+    <div class="embed-container">
+      <iframe
+        id="configurator-iframe"
+        src="http://localhost:3000/?embed=1&origin=http://localhost:3000"
+        title="Tent Configurator"
+        sandbox="allow-scripts allow-same-origin"
+      ></iframe>
+    </div>
+
+    <!-- Parent-to-iframe controls -->
+    <div class="parent-controls">
+      <h3>Parent Window Controls (simulates Shopify merchant page)</h3>
+      <button onclick="sendToConfigurator('SET_OPTION', { groupId: 'side-walls', choiceId: 'wall-1-single' })">
+        Set: 1 Side Wall (Single)
+      </button>
+      <button onclick="sendToConfigurator('SET_OPTION', { groupId: 'side-walls', choiceId: 'wall-3-double' })">
+        Set: 3 Side Walls (Double)
+      </button>
+      <button onclick="sendToConfigurator('SET_OPTION', { groupId: 'half-walls', choiceId: 'half-wall-single' })">
+        Set: Half Walls (Single)
+      </button>
+      <button onclick="sendToConfigurator('SET_OPTION', { groupId: 'frame-type', choiceId: 'canopy-only' })">
+        Set: Canopy Only
+      </button>
+    </div>
+
+    <!-- Message log -->
+    <div class="message-log" id="message-log">
+      <h3>📡 PostMessage Log</h3>
+    </div>
+  </main>
+
+  <script>
+    const iframe = document.getElementById('configurator-iframe');
+    const logEl = document.getElementById('message-log');
+
+    function addLog(direction, data) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry' + (direction === 'outbound' ? ' outbound' : '');
+      const prefix = direction === 'inbound' ? '← IFRAME' : '→ PARENT';
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${prefix}: ${JSON.stringify(data)}`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    /* Listen for messages from the configurator iframe */
+    window.addEventListener('message', (event) => {
+      if (event.data?.namespace !== 'tent-configurator') return;
+      addLog('inbound', event.data);
+
+      if (event.data.type === 'ADD_TO_CART_REQUESTED') {
+        alert(`Cart: Would add variant ${event.data.variantId} — $${(event.data.quoteTotalCents / 100).toFixed(2)}`);
+      }
+    });
+
+    function sendToConfigurator(type, payload) {
+      const message = { namespace: 'tent-configurator', type, ...payload };
+      iframe.contentWindow.postMessage(message, '*');
+      addLog('outbound', message);
+    }
+  </script>
+</body>
+</html>

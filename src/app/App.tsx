@@ -91,10 +91,18 @@ export function App() {
       {!isEmbed && (
         <header className="configurator-header">
           <div className="header-brand">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M3 21h18M4 18l8-12 8 12M4 18h16" />
-            </svg>
-            <h1>10X10 LOGO CANOPY TENT</h1>
+            <div className="header-logo-badge">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 21h18M4 18l8-12 8 12M4 18h16" />
+              </svg>
+            </div>
+            <div className="header-brand-text">
+              <h1>10×10 CUSTOM CANOPY TENT</h1>
+              <span className="header-brand-sub">COMMERCIAL 3D STUDIO • PRO SERIES</span>
+            </div>
+            <span className="live-indicator">
+              <span className="live-dot" /> LIVE 3D ENGINE
+            </span>
           </div>
           <div className="header-meta">
             <button
@@ -103,10 +111,10 @@ export function App() {
               disabled={isPdfGenerating || !currentQuote}
               title="Download production PDF"
             >
-              {isPdfGenerating ? '⏳ Generating…' : '📄 Download PDF'}
+              {isPdfGenerating ? '⏳ Generating…' : '📄 Export Spec Sheet'}
             </button>
-            <span className="header-badge">Production: 2 Business Days</span>
-            <span className="header-badge">Free Layouts & No Setup Fees</span>
+            <span className="header-badge">⚡ 2-Day Production</span>
+            <span className="header-badge">🛡️ Commercial Grade</span>
           </div>
         </header>
       )}
@@ -156,24 +164,20 @@ export function App() {
         >
           <div className="sidebar-info">
             <div className="info-item">
-              <span className="info-marker" />
-              <span>Production Time: 2 Business Days</span>
+              <span className="info-icon">⚡</span>
+              <span><strong>Production:</strong> 2 Business Days</span>
             </div>
             <div className="info-item">
-              <span className="info-marker" />
-              <span>Delivery Date: 5-7 Business Days</span>
+              <span className="info-icon">🚚</span>
+              <span><strong>Delivery:</strong> 5–7 Days Nationwide</span>
             </div>
             <div className="info-item">
-              <span className="info-marker" />
-              <span>Quantity Discounts Available</span>
+              <span className="info-icon">🏷️</span>
+              <span><strong>Wholesale:</strong> Volume Tier Pricing</span>
             </div>
             <div className="info-item">
-              <span className="info-marker" />
-              <span>No Minimum Orders</span>
-            </div>
-            <div className="info-item">
-              <span className="info-marker" />
-              <span>Free Layouts & No Setup Fees</span>
+              <span className="info-icon">✨</span>
+              <span><strong>No Minimums:</strong> Free Digital Proofs</span>
             </div>
           </div>
 

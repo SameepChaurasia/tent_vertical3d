@@ -11,8 +11,8 @@ import {
 } from '../configurator/configurator.store';
 import type { ImageLayer, AssetEntry } from '../../domain/schemas';
 
-const EDITOR_WIDTH = 512;
-const EDITOR_HEIGHT = 512;
+const EDITOR_WIDTH = 340;
+const EDITOR_HEIGHT = 340;
 
 interface EditorImageProps {
   layer: ImageLayer;
@@ -207,24 +207,32 @@ export function DesignEditor() {
         ))}
       </div>
 
-      <div className="editor-2d-canvas-wrapper">
-        <Stage
-          ref={stageRef}
-          width={EDITOR_WIDTH}
-          height={EDITOR_HEIGHT}
-          onClick={handleStageClick}
-          style={{ border: '1px solid #333', borderRadius: '8px' }}
-        >
-          <Layer>
-            {/* Base colour fill */}
-            <Rect
-              x={0}
-              y={0}
-              width={EDITOR_WIDTH}
-              height={EDITOR_HEIGHT}
-              fill={sectionConfig.baseColor}
-              listening={false}
-            />
+      <div className="editor-2d-artboard-card">
+        <div className="artboard-card-header">
+          <div className="artboard-title-group">
+            <span className="artboard-dot" />
+            <span className="artboard-title">PRINT UNWRAP CANVAS</span>
+          </div>
+          <span className="artboard-dim-badge">2048 × 2048 MASTER</span>
+        </div>
+        <div className="editor-2d-canvas-wrapper">
+          <Stage
+            ref={stageRef}
+            width={EDITOR_WIDTH}
+            height={EDITOR_HEIGHT}
+            onClick={handleStageClick}
+            style={{ borderRadius: '6px', overflow: 'hidden' }}
+          >
+            <Layer>
+              {/* Base colour fill */}
+              <Rect
+                x={0}
+                y={0}
+                width={EDITOR_WIDTH}
+                height={EDITOR_HEIGHT}
+                fill={sectionConfig.baseColor}
+                listening={false}
+              />
 
             {/* Region guide lines */}
             {productDef.sections
@@ -261,6 +269,7 @@ export function DesignEditor() {
               if (!layer.visible) return null;
 
               if (layer.kind === 'text') {
+                const scaledFontSize = layer.fontSizePt * (EDITOR_WIDTH / 512);
                 return (
                   <Text
                     key={layer.id}
@@ -268,7 +277,7 @@ export function DesignEditor() {
                     x={layer.normalizedX * EDITOR_WIDTH}
                     y={layer.normalizedY * EDITOR_HEIGHT}
                     text={layer.content}
-                    fontSize={layer.fontSizePt}
+                    fontSize={scaledFontSize}
                     fontFamily={layer.fontFamily}
                     fill={layer.fill}
                     align={layer.align}
@@ -276,7 +285,7 @@ export function DesignEditor() {
                     rotation={layer.rotationDegrees}
                     draggable={!layer.locked}
                     offsetX={0}
-                    offsetY={layer.fontSizePt / 2}
+                    offsetY={scaledFontSize / 2}
                     onDragEnd={(e) => handleDragEnd(layer.id, e)}
                     onTransformEnd={(e) => handleTransformEnd(layer.id, e)}
                     onClick={() => selectLayer(layer.id)}
@@ -320,5 +329,6 @@ export function DesignEditor() {
         </Stage>
       </div>
     </div>
-  );
+  </div>
+);
 }

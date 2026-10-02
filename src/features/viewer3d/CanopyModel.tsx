@@ -150,49 +150,44 @@ function ProceduralWalls({
   const wallDepth = halfDepth * 2;
   const halfWallHeight = eavesHeight * 0.48;
 
-  /* Offscreen canvas & texture for side walls if custom layers exist */
-  const wallCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const wallTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  /* Offscreen canvas & texture for side walls if custom layers exist — created synchronously */
+  const { wallCanvas, wallTexture } = useMemo(() => {
+    if (typeof document === 'undefined') return { wallCanvas: null, wallTexture: null };
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 1024;
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.flipY = false;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return { wallCanvas: canvas, wallTexture: texture };
+  }, []);
   const [hasWallLayers, setHasWallLayers] = useState(false);
 
   useEffect(() => {
-    if (!wallCanvasRef.current) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 1024;
-      canvas.height = 1024;
-      wallCanvasRef.current = canvas;
-      const texture = new THREE.CanvasTexture(canvas);
-      texture.flipY = false;
-      texture.colorSpace = THREE.SRGBColorSpace;
-      wallTextureRef.current = texture;
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!wallCanvasRef.current || !sideWallsConfig) return;
-    const ctx = wallCanvasRef.current.getContext('2d');
+    if (!wallCanvas || !wallTexture || !sideWallsConfig) return;
+    const ctx = wallCanvas.getContext('2d');
     if (!ctx) return;
 
     if (sideWallsConfig.layers.length > 0) {
-      renderSectionToCanvas(ctx, 1024, 1024, sideWallsConfig);
-      if (wallTextureRef.current) {
-        wallTextureRef.current.needsUpdate = true;
-      }
+      renderSectionToCanvas(ctx, 1024, 1024, sideWallsConfig, () => {
+        wallTexture.needsUpdate = true;
+      });
+      wallTexture.needsUpdate = true;
       setHasWallLayers(true);
     } else {
       setHasWallLayers(false);
     }
-  }, [sideWallsConfig]);
+  }, [sideWallsConfig, wallCanvas, wallTexture]);
 
   const wallMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
       color: hasWallLayers ? '#ffffff' : wallColor,
-      map: hasWallLayers ? wallTextureRef.current : null,
+      map: hasWallLayers ? wallTexture : null,
       roughness: 0.7,
       metalness: 0.05,
       side: THREE.DoubleSide,
     });
-  }, [wallColor, hasWallLayers]);
+  }, [wallColor, hasWallLayers, wallTexture]);
 
   const halfWallMaterial = useMemo(() => {
     return new THREE.MeshStandardMaterial({
@@ -321,25 +316,37 @@ export function CanopyModel() {
 
   const { scene } = useGLTF(modelUrl);
   const modelRef = useRef<THREE.Group>(null);
-  const canvasTextureRef = useRef<THREE.CanvasTexture | null>(null);
-  const offscreenCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const fabricMaterialRef = useRef<THREE.MeshStandardMaterial | null>(null);
+  const innerFabricMaterialRef = useRef<THREE.MeshStandardMaterial | null>(null);
   const metalMaterialRef = useRef<THREE.MeshStandardMaterial | null>(null);
   const { invalidate: invalidateFrame } = useThree();
 
-  const [, setTextureVersion] = useState(0);
-
-  /* Create the offscreen canvas for fabric texture — persistent across re-renders */
-  useEffect(() => {
-    if (!offscreenCanvasRef.current) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 2048;
-      canvas.height = 2048;
-      offscreenCanvasRef.current = canvas;
+  /* Create the offscreen canvas & CanvasTexture synchronously in useMemo — ready on frame 0 */
+  const { offscreenCanvas, canvasTexture } = useMemo(() => {
+    if (typeof document === 'undefined') {
+      return { offscreenCanvas: null, canvasTexture: null };
     }
-    return () => {
-      offscreenCanvasRef.current = null;
-    };
+    const canvas = document.createElement('canvas');
+    canvas.width = 2048;
+    canvas.height = 2048;
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.flipY = false;
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.anisotropy = 8;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+
+    /* Pre-paint initial canopy configuration immediately */
+    const ctx = canvas.getContext('2d');
+    if (ctx && canopyConfig) {
+      renderSectionToCanvas(ctx, 2048, 2048, canopyConfig);
+      texture.needsUpdate = true;
+    }
+
+    return { offscreenCanvas: canvas, canvasTexture: texture };
   }, []);
 
   /* Clone the scene and set up materials */
@@ -361,19 +368,10 @@ export function CanopyModel() {
         /* ── Fabric outer material ── */
         if (mat.name === modelVariant.materialMap.fabricOuter) {
           const fabricMat = mat.clone();
+          fabricMat.color.set('#ffffff'); // Pure white base so canvas texture color is 100% faithful
 
-          if (offscreenCanvasRef.current) {
-            const canvasTexture = new THREE.CanvasTexture(offscreenCanvasRef.current);
-            canvasTexture.flipY = false;
-            canvasTexture.colorSpace = THREE.SRGBColorSpace;
-            canvasTexture.wrapS = THREE.ClampToEdgeWrapping;
-            canvasTexture.wrapT = THREE.ClampToEdgeWrapping;
-            canvasTexture.anisotropy = 8;
-            canvasTexture.minFilter = THREE.LinearMipMapLinearFilter;
-            canvasTexture.magFilter = THREE.LinearFilter;
-
+          if (canvasTexture) {
             fabricMat.map = canvasTexture;
-            canvasTextureRef.current = canvasTexture;
           }
 
           fabricMaterialRef.current = fabricMat;
@@ -385,9 +383,27 @@ export function CanopyModel() {
           }
         }
 
+        /* ── Fabric inner material (underside) ── */
+        if (mat.name === modelVariant.materialMap.fabricInner) {
+          const innerMat = mat.clone();
+          if (canopyConfig) {
+            innerMat.color.set(canopyConfig.baseColor);
+          }
+          innerFabricMaterialRef.current = innerMat;
+
+          if (Array.isArray(child.material)) {
+            child.material[index] = innerMat;
+          } else {
+            child.material = innerMat;
+          }
+        }
+
         /* ── Metal material ── */
         if (mat.name === modelVariant.materialMap.metal) {
           const metalMat = mat.clone();
+          if (frameConfig) {
+            metalMat.color.set(frameConfig.baseColor);
+          }
           metalMaterialRef.current = metalMat;
 
           if (Array.isArray(child.material)) {
@@ -415,40 +431,28 @@ export function CanopyModel() {
     cloned.position.multiplyScalar(scale);
 
     return cloned;
-  }, [scene, modelVariant]);
+  }, [scene, modelVariant, canvasTexture]);
 
-  /* ── Sync: 2D configuration → 3D canvas texture (throttled with rAF) ── */
-  const rafIdRef = useRef<number | null>(null);
-
+  /* ── Sync: 2D configuration → 3D canvas texture (immediate on the spot) ── */
   useEffect(() => {
-    const canvas = offscreenCanvasRef.current;
-    if (!canvas || !canopyConfig) return;
+    if (!offscreenCanvas || !canvasTexture || !canopyConfig) return;
 
-    const ctx = canvas.getContext('2d');
+    const ctx = offscreenCanvas.getContext('2d');
     if (!ctx) return;
 
-    if (rafIdRef.current !== null) {
-      cancelAnimationFrame(rafIdRef.current);
-    }
-
-    rafIdRef.current = requestAnimationFrame(() => {
-      renderSectionToCanvas(ctx, canvas.width, canvas.height, canopyConfig, () => {
-        setTextureVersion((v) => v + 1);
-      });
-
-      if (canvasTextureRef.current) {
-        canvasTextureRef.current.needsUpdate = true;
-        invalidateFrame();
-      }
-      rafIdRef.current = null;
+    // Immediately render to canvas synchronously
+    renderSectionToCanvas(ctx, offscreenCanvas.width, offscreenCanvas.height, canopyConfig, () => {
+      canvasTexture.needsUpdate = true;
+      invalidateFrame();
     });
 
-    return () => {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
-    };
-  }, [canopyConfig, invalidateFrame]);
+    if (innerFabricMaterialRef.current) {
+      innerFabricMaterialRef.current.color.set(canopyConfig.baseColor);
+    }
+
+    canvasTexture.needsUpdate = true;
+    invalidateFrame();
+  }, [canopyConfig, offscreenCanvas, canvasTexture, invalidateFrame]);
 
   /* ── Sync: frame colour ── */
   useEffect(() => {
@@ -482,11 +486,12 @@ export function CanopyModel() {
   /* ── Cleanup: dispose GPU resources ── */
   useEffect(() => {
     return () => {
-      canvasTextureRef.current?.dispose();
+      canvasTexture?.dispose();
       fabricMaterialRef.current?.dispose();
+      innerFabricMaterialRef.current?.dispose();
       metalMaterialRef.current?.dispose();
     };
-  }, []);
+  }, [canvasTexture]);
 
   const tentBounds = useMemo(() => {
     const widthRatio = modelVariant ? modelVariant.physicalWidthInches / 60 : 1;

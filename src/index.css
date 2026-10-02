@@ -79,15 +79,7 @@
   --header-height: 58px;
 }
 
-/* ───── Reset & Base ───── */
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* Tailwind v4 handles reset inside @layer base */
 
 html {
   font-size: 16px;

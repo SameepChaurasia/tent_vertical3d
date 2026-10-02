@@ -185,25 +185,25 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
   ];
 
   return (
-    <div className="p-4 space-y-4 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
-      {/* Primary Action Toolbar */}
-      <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-800/80">
-        <div className="flex items-center gap-2.5">
+    <div className="space-y-6 text-slate-100 outline-none focus:outline-none" onKeyDown={handleKeyDown} tabIndex={0}>
+      {/* Primary Action Toolbar Card */}
+      <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+        <div className="flex items-center gap-3">
           <button
-            className="flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 hover:from-amber-300 hover:to-amber-400 transition-all shadow-md shadow-amber-500/20 cursor-pointer active:scale-95"
+            className="flex items-center gap-2.5 px-5 py-2.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 hover:from-amber-300 hover:to-amber-400 shadow-lg shadow-amber-500/25 transition-all cursor-pointer active:scale-95"
             onClick={handleAddText}
-            title="Add Text Layer"
+            title="Add New Text Layer to Canvas"
           >
-            <span className="text-sm font-extrabold leading-none">+</span>
+            <span className="text-base font-extrabold leading-none">+</span>
             <span>Add Text</span>
           </button>
 
           <button
-            className="flex items-center gap-2 px-4 py-2 text-xs font-semibold rounded-xl bg-slate-800/90 text-slate-200 border border-slate-700/80 hover:bg-slate-700 hover:border-slate-600 transition-all shadow-sm cursor-pointer active:scale-95"
+            className="flex items-center gap-2.5 px-5 py-2.5 text-xs font-semibold rounded-xl bg-[#1b2131] text-slate-200 border border-white/[0.08] hover:bg-[#232c40] hover:border-white/[0.15] shadow-md transition-all cursor-pointer active:scale-95"
             onClick={() => fileInputRef.current?.click()}
             title="Upload Artwork or Logo (PNG, JPEG, WebP up to 10MB)"
           >
-            <span className="text-sm leading-none">📷</span>
+            <span className="text-base leading-none">📷</span>
             <span>Upload Image</span>
           </button>
 
@@ -217,9 +217,9 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
           />
         </div>
 
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           <button
-            className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center text-sm font-bold rounded-xl bg-[#1b2131] border border-white/[0.08] text-slate-300 hover:bg-[#232c40] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-sm"
             onClick={undo}
             disabled={!canUndo}
             title="Undo (Ctrl+Z)"
@@ -227,7 +227,7 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
             ↶
           </button>
           <button
-            className="w-8 h-8 flex items-center justify-center text-sm font-semibold rounded-lg bg-slate-800/80 border border-slate-700 text-slate-300 hover:bg-slate-700 hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer"
+            className="w-10 h-10 flex items-center justify-center text-sm font-bold rounded-xl bg-[#1b2131] border border-white/[0.08] text-slate-300 hover:bg-[#232c40] hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all cursor-pointer shadow-sm"
             onClick={redo}
             disabled={!canRedo}
             title="Redo (Ctrl+Shift+Z)"
@@ -238,9 +238,9 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
       </div>
 
       {uploadError && (
-        <div className="p-3 text-xs text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-xl flex items-center gap-2" role="alert">
-          <span>⚠️</span>
-          <span>{uploadError}</span>
+        <div className="p-4 text-xs text-rose-300 bg-rose-500/15 border border-rose-500/30 rounded-2xl flex items-center gap-3 shadow-lg" role="alert">
+          <span className="text-base">⚠️</span>
+          <span className="font-medium">{uploadError}</span>
         </div>
       )}
 
@@ -248,44 +248,47 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
       {children}
 
       {/* Base Fabric Color Section */}
-      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 space-y-3 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm">🎨</span>
-            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">Base Fabric Color</span>
+      <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-6 space-y-5 shadow-xl">
+        <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.06]">
+          <div>
+            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+              <span>🎨</span>
+              <span>Base Fabric Color</span>
+            </h4>
+            <p className="text-[11px] text-slate-400 mt-1">Select from commercial fabric finishes or pick a custom hex</p>
           </div>
-          <div className="flex items-center gap-2 bg-slate-950/80 px-2.5 py-1 rounded-lg border border-slate-800">
+          <div className="flex items-center gap-2.5 bg-[#0a0d14] px-3.5 py-1.5 rounded-xl border border-white/[0.08] shadow-inner">
             <input
               type="color"
               value={sectionConfig?.baseColor ?? '#F5A623'}
               onChange={(e) => setSectionBaseColor(sectionId, e.target.value)}
-              className="w-5 h-5 rounded cursor-pointer border-0 bg-transparent"
+              className="w-6 h-6 rounded-lg cursor-pointer border-0 bg-transparent"
               title="Custom Hex Picker"
             />
-            <span className="text-xs font-mono font-semibold text-slate-300">
+            <span className="text-xs font-mono font-bold text-amber-400">
               {sectionConfig?.baseColor ?? '#F5A623'}
             </span>
           </div>
         </div>
 
         {/* Spacious 6-column swatches */}
-        <div className="grid grid-cols-6 gap-2 pt-1">
+        <div className="grid grid-cols-6 gap-3 pt-1">
           {colorSwatches.map((color) => {
             const isSelected = sectionConfig?.baseColor?.toLowerCase() === color.toLowerCase();
             return (
               <button
                 key={color}
-                className={`h-8 rounded-lg border transition-all cursor-pointer flex items-center justify-center relative ${
+                className={`h-11 rounded-xl border transition-all cursor-pointer flex items-center justify-center relative ${
                   isSelected
-                    ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-slate-900 border-white scale-105 shadow-md shadow-amber-500/20'
-                    : 'border-white/10 hover:border-white/30 hover:scale-105'
+                    ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#121622] border-white scale-105 shadow-lg shadow-amber-500/25'
+                    : 'border-white/[0.08] hover:border-white/30 hover:scale-105'
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => setSectionBaseColor(sectionId, color)}
                 aria-label={`Set base color to ${color}`}
               >
                 {isSelected && (
-                  <span className="text-white text-xs drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">✓</span>
+                  <span className="text-white text-sm font-bold drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">✓</span>
                 )}
               </button>
             );
@@ -294,20 +297,23 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
       </div>
 
       {/* Brand Style Presets Section */}
-      <div className="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-4 space-y-3 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm">⚡</span>
-            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">1-Click Brand Presets</span>
+      <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-6 space-y-5 shadow-xl">
+        <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.06]">
+          <div>
+            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+              <span>⚡</span>
+              <span>Curated Brand Presets</span>
+            </h4>
+            <p className="text-[11px] text-slate-400 mt-1">1-click ready-to-print commercial colorways</p>
           </div>
-          <span className="text-[10px] font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+          <span className="text-[10px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-full">
             Instant Theme
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
           <button
-            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-cyan-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            className="p-4 rounded-xl bg-[#0a0d14] border border-white/[0.06] hover:border-cyan-500/50 hover:bg-[#111726] transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between min-h-[96px]"
             onClick={() => {
               setSectionBaseColor('canopy', '#0F172A');
               setSectionBaseColor('frame', '#334155');
@@ -321,18 +327,18 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
               selectLayer(layerId);
             }}
           >
-            <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#0F172A] border border-cyan-400/50 inline-block" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#00E5FF] inline-block" />
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-4 rounded-full bg-[#0F172A] border border-cyan-400/50 shadow-sm" />
+              <span className="w-4 h-4 rounded-full bg-[#00E5FF] shadow-sm" />
             </div>
             <div>
               <div className="text-xs font-bold text-slate-200 group-hover:text-cyan-300">Apex Tech</div>
-              <div className="text-[10px] text-slate-400">Midnight & Cyan</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Midnight & Cyan</div>
             </div>
           </button>
 
           <button
-            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-amber-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            className="p-4 rounded-xl bg-[#0a0d14] border border-white/[0.06] hover:border-amber-500/50 hover:bg-[#111726] transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between min-h-[96px]"
             onClick={() => {
               setSectionBaseColor('canopy', '#EA580C');
               setSectionBaseColor('frame', '#E2E8F0');
@@ -346,18 +352,18 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
               selectLayer(layerId);
             }}
           >
-            <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#EA580C] border border-amber-400/50 inline-block" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#FFFFFF] inline-block" />
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-4 rounded-full bg-[#EA580C] border border-amber-400/50 shadow-sm" />
+              <span className="w-4 h-4 rounded-full bg-[#FFFFFF] shadow-sm" />
             </div>
             <div>
               <div className="text-xs font-bold text-slate-200 group-hover:text-amber-300">Summer Fest</div>
-              <div className="text-[10px] text-slate-400">Warm Coral & White</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Warm Coral & White</div>
             </div>
           </button>
 
           <button
-            className="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-rose-500/50 hover:bg-slate-800/50 transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between"
+            className="p-4 rounded-xl bg-[#0a0d14] border border-white/[0.06] hover:border-rose-500/50 hover:bg-[#111726] transition-all text-left cursor-pointer group shadow-sm flex flex-col justify-between min-h-[96px]"
             onClick={() => {
               setSectionBaseColor('canopy', '#18181B');
               setSectionBaseColor('frame', '#DC2626');
@@ -371,13 +377,13 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
               selectLayer(layerId);
             }}
           >
-            <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#18181B] border border-rose-400/50 inline-block" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#DC2626] inline-block" />
+            <div className="flex items-center gap-2 mb-2">
+              <span className="w-4 h-4 rounded-full bg-[#18181B] border border-rose-400/50 shadow-sm" />
+              <span className="w-4 h-4 rounded-full bg-[#DC2626] shadow-sm" />
             </div>
             <div>
               <div className="text-xs font-bold text-slate-200 group-hover:text-rose-300">Velocity GT</div>
-              <div className="text-[10px] text-slate-400">Stealth & Racing Red</div>
+              <div className="text-[11px] text-slate-400 mt-0.5">Stealth & Racing Red</div>
             </div>
           </button>
         </div>
@@ -385,21 +391,24 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
 
       {/* Selected layer properties */}
       {selectedLayer && (
-        <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-3.5 shadow-sm">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
-            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-400 uppercase">
-              <span>🎛️</span>
-              <span>{selectedLayer.kind === 'text' ? 'Text Layer Settings' : 'Image Layer Settings'}</span>
-            </h4>
-            <span className="text-[10px] font-mono text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
+        <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-6 space-y-5 shadow-xl">
+          <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.06]">
+            <div>
+              <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-amber-400 uppercase">
+                <span>🎛️</span>
+                <span>{selectedLayer.kind === 'text' ? 'Text Layer Settings' : 'Image Layer Settings'}</span>
+              </h4>
+              <p className="text-[11px] text-slate-400 mt-1">Adjust typography, scaling, and layer styling</p>
+            </div>
+            <span className="text-[10px] font-mono text-slate-400 bg-[#0a0d14] px-2.5 py-1 rounded-lg border border-white/[0.08]">
               ID: {selectedLayer.id.slice(0, 6)}
             </span>
           </div>
 
           {selectedLayer.kind === 'text' && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <label htmlFor="text-content" className="text-xs text-slate-300 font-medium w-14 shrink-0">Text:</label>
+                <label htmlFor="text-content" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Text:</label>
                 <input
                   id="text-content"
                   type="text"
@@ -410,12 +419,12 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
                     })
                   }
                   maxLength={200}
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
+                  className="flex-1 px-4 py-2.5 text-xs bg-[#0a0d14] border border-white/[0.1] rounded-xl text-white focus:outline-none focus:border-amber-400 shadow-inner"
                 />
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-font" className="text-xs text-slate-300 font-medium w-14 shrink-0">Font:</label>
+                <label htmlFor="text-font" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Font:</label>
                 <select
                   id="text-font"
                   value={selectedLayer.fontFamily}
@@ -424,7 +433,7 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
                       fontFamily: e.target.value as typeof selectedLayer.fontFamily,
                     })
                   }
-                  className="flex-1 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-amber-400"
+                  className="flex-1 px-4 py-2.5 text-xs bg-[#0a0d14] border border-white/[0.1] rounded-xl text-white focus:outline-none focus:border-amber-400 shadow-inner cursor-pointer"
                 >
                   {ALLOWED_FONT_FAMILIES.map((font) => (
                     <option key={font} value={font} className="bg-slate-900 text-white">
@@ -435,26 +444,28 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-size" className="text-xs text-slate-300 font-medium w-14 shrink-0">Size:</label>
-                <input
-                  id="text-size"
-                  type="number"
-                  value={selectedLayer.fontSizePt}
-                  onChange={(e) =>
-                    updateLayer(sectionId, selectedLayer.id, {
-                      fontSizePt: Math.max(8, Math.min(200, Number(e.target.value))),
-                    })
-                  }
-                  min={8}
-                  max={200}
-                  className="w-20 px-2.5 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-white font-mono focus:outline-none focus:border-amber-400"
-                />
-                <span className="text-[11px] text-slate-400">pt</span>
+                <label htmlFor="text-size" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Size:</label>
+                <div className="flex items-center gap-2">
+                  <input
+                    id="text-size"
+                    type="number"
+                    value={selectedLayer.fontSizePt}
+                    onChange={(e) =>
+                      updateLayer(sectionId, selectedLayer.id, {
+                        fontSizePt: Math.max(8, Math.min(200, Number(e.target.value))),
+                      })
+                    }
+                    min={8}
+                    max={200}
+                    className="w-24 px-3 py-2 text-xs bg-[#0a0d14] border border-white/[0.1] rounded-xl text-white font-mono focus:outline-none focus:border-amber-400 shadow-inner"
+                  />
+                  <span className="text-xs text-slate-400">pt</span>
+                </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-color" className="text-xs text-slate-300 font-medium w-14 shrink-0">Color:</label>
-                <div className="flex items-center gap-2">
+                <label htmlFor="text-color" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Color:</label>
+                <div className="flex items-center gap-3 bg-[#0a0d14] px-3.5 py-1.5 rounded-xl border border-white/[0.1]">
                   <input
                     id="text-color"
                     type="color"
@@ -462,19 +473,19 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
                     onChange={(e) =>
                       updateLayer(sectionId, selectedLayer.id, { fill: e.target.value })
                     }
-                    className="w-8 h-8 rounded border border-slate-700 cursor-pointer bg-transparent"
+                    className="w-7 h-7 rounded-lg border-0 cursor-pointer bg-transparent"
                   />
-                  <span className="text-xs font-mono text-slate-300">{selectedLayer.fill.toUpperCase()}</span>
+                  <span className="text-xs font-mono font-bold text-slate-300">{selectedLayer.fill.toUpperCase()}</span>
                 </div>
               </div>
 
               <div className="flex items-center gap-3">
-                <span className="text-xs text-slate-300 font-medium w-14 shrink-0">Align:</span>
-                <div className="flex items-center gap-1 bg-slate-950 p-1 border border-slate-700 rounded-lg">
+                <span className="text-xs text-slate-300 font-semibold w-16 shrink-0">Align:</span>
+                <div className="flex items-center gap-1.5 bg-[#0a0d14] p-1.5 border border-white/[0.1] rounded-xl">
                   {(['left', 'center', 'right'] as const).map((align) => (
                     <button
                       key={align}
-                      className={`px-3 py-1 text-xs font-bold rounded cursor-pointer transition-colors ${
+                      className={`px-4 py-1.5 text-xs font-bold rounded-lg cursor-pointer transition-colors ${
                         selectedLayer.align === align
                           ? 'bg-amber-500 text-slate-950 shadow-sm'
                           : 'text-slate-400 hover:text-white'
@@ -491,7 +502,7 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
               </div>
 
               <div className="flex items-center gap-3">
-                <label htmlFor="text-opacity" className="text-xs text-slate-300 font-medium w-14 shrink-0">Opacity:</label>
+                <label htmlFor="text-opacity" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Opacity:</label>
                 <input
                   id="text-opacity"
                   type="range"
@@ -503,9 +514,9 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
                       opacity: Number(e.target.value) / 100,
                     })
                   }
-                  className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  className="flex-1 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
-                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
+                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right font-semibold">
                   {Math.round(selectedLayer.opacity * 100)}%
                 </span>
               </div>
@@ -513,9 +524,9 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
           )}
 
           {selectedLayer.kind === 'image' && (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <label htmlFor="image-opacity" className="text-xs text-slate-300 font-medium w-14 shrink-0">Opacity:</label>
+                <label htmlFor="image-opacity" className="text-xs text-slate-300 font-semibold w-16 shrink-0">Opacity:</label>
                 <input
                   id="image-opacity"
                   type="range"
@@ -527,24 +538,24 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
                       opacity: Number(e.target.value) / 100,
                     })
                   }
-                  className="flex-1 h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
+                  className="flex-1 h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-400"
                 />
-                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right">
+                <span className="text-xs font-mono text-slate-400 min-w-[36px] text-right font-semibold">
                   {Math.round(selectedLayer.opacity * 100)}%
                 </span>
               </div>
             </div>
           )}
 
-          <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
+          <div className="flex items-center gap-3 pt-3 border-t border-white/[0.06]">
             <button
-              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-rose-500/15 text-rose-300 border border-rose-500/40 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center"
+              className="flex-1 px-4 py-2.5 text-xs font-bold rounded-xl bg-rose-500/15 text-rose-300 border border-rose-500/40 hover:bg-rose-500 hover:text-white transition-all cursor-pointer text-center active:scale-95 shadow-sm"
               onClick={handleDeleteSelected}
             >
               🗑️ Delete Layer
             </button>
             <button
-              className="flex-1 px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700 hover:text-white transition-all cursor-pointer text-center"
+              className="flex-1 px-4 py-2.5 text-xs font-bold rounded-xl bg-[#1b2131] text-slate-200 border border-white/[0.08] hover:bg-[#232c40] hover:text-white transition-all cursor-pointer text-center active:scale-95 shadow-sm"
               onClick={handleDuplicateSelected}
             >
               📋 Duplicate
@@ -555,13 +566,18 @@ export function DesignControls({ children }: { children?: React.ReactNode } = {}
 
       {/* Layer list card */}
       {sectionConfig && sectionConfig.layers.length > 0 && (
-        <div className="bg-slate-900/70 border border-slate-700/80 rounded-xl p-3.5 space-y-2.5 shadow-sm">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-800">
-            <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
-              <span>📑</span>
-              <span>Active Artwork Layers</span>
-            </h4>
-            <span className="text-[10px] font-mono text-slate-400 font-semibold">{sectionConfig.layers.length} items</span>
+        <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-xl">
+          <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+            <div>
+              <h4 className="flex items-center gap-2 text-xs font-bold tracking-wider text-slate-200 uppercase">
+                <span>📑</span>
+                <span>Active Artwork Layers</span>
+              </h4>
+              <p className="text-[11px] text-slate-400 mt-0.5">Click a layer to transform or adjust properties</p>
+            </div>
+            <span className="text-xs font-mono text-amber-400 font-bold bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+              {sectionConfig.layers.length} {sectionConfig.layers.length === 1 ? 'layer' : 'layers'}
+            </span>
           </div>
           <ul className="space-y-1.5">
             {[...sectionConfig.layers].reverse().map((layer) => {

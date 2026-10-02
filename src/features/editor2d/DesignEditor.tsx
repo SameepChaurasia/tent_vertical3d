@@ -221,26 +221,32 @@ export function DesignEditor() {
       )}
 
       {/* Artboard Card */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 shadow-lg">
-        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-            <span className="text-xs font-bold tracking-wider text-slate-200 uppercase">
-              {activeSectionId === 'canopy' ? '⛺ ROOF & VALANCE CANVAS' : '🧱 PRINT SURFACE CANVAS'}
-            </span>
+      <div className="bg-[#121622] border border-white/[0.08] rounded-2xl p-6 shadow-xl space-y-4">
+        <div className="flex items-center justify-between pb-3.5 border-b border-white/[0.06]">
+          <div className="flex items-center gap-2.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse shadow-[0_0_8px_#f59e0b]" />
+            <div>
+              <span className="text-xs font-bold tracking-wider text-white uppercase block">
+                {activeSectionId === 'canopy' ? '⛺ Canopy Roof & Valance Canvas' : '🧱 Print Surface Canvas'}
+              </span>
+              <span className="text-[11px] text-slate-400 block mt-0.5">
+                Precision UV Unwrap • Live 3D Texture Projection
+              </span>
+            </div>
           </div>
-          <span className="text-[10px] font-mono font-bold text-amber-300 bg-amber-500/10 border border-amber-500/25 px-2.5 py-0.5 rounded-full">
+          <span className="text-[10px] font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/25 px-3 py-1 rounded-full">
             2048 × 2048 MASTER
           </span>
         </div>
-        <div className="editor-2d-canvas-wrapper flex justify-center items-center py-1">
-          <div className="rounded-xl overflow-hidden shadow-2xl border border-slate-700/60 bg-slate-950">
-            <Stage
-              ref={stageRef}
-              width={EDITOR_WIDTH}
-              height={EDITOR_HEIGHT}
-              onClick={handleStageClick}
-            >
+        <div className="editor-2d-canvas-wrapper flex flex-col justify-center items-center py-2">
+          <div className="rounded-2xl p-2 bg-[#0a0d14] border border-white/[0.08] shadow-2xl">
+            <div className="rounded-xl overflow-hidden shadow-inner border border-white/5">
+              <Stage
+                ref={stageRef}
+                width={EDITOR_WIDTH}
+                height={EDITOR_HEIGHT}
+                onClick={handleStageClick}
+              >
             <Layer>
               {/* Base colour fill */}
               <Rect
@@ -344,10 +350,14 @@ export function DesignEditor() {
               ]}
             />
           </Layer>
-        </Stage>
+            </Stage>
           </div>
         </div>
+        <p className="text-center text-[11px] text-slate-400 pt-2 font-medium">
+          💡 Drag elements on canvas • Corner anchors scale &amp; rotate • Updates 3D model live
+        </p>
       </div>
     </div>
-  );
+  </div>
+);
 }

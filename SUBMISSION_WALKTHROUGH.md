@@ -36,7 +36,7 @@ This project is a production-grade, commercial 3D product configurator developed
 ## 🏗 Architecture & Design System
 
 ```
-tent-configurator/
+threejs_assignment/
 ├── src/
 │   ├── domain/                         # Pure business logic (framework-agnostic)
 │   │   ├── schemas/                    # Zod schemas (single source of truth)
@@ -109,7 +109,7 @@ All amounts in the pricing engine, schemas, and state store are integer cents (`
 ## 🧪 Verification & Test Results
 
 ```
- RUN  v5.0.3 tent-configurator
+ RUN  v5.0.3 threejs_assignment
 
  ✓ tests/pricing-engine.test.ts (15 tests)
  ✓ tests/embed-protocol.test.ts (12 tests)
@@ -125,22 +125,19 @@ All amounts in the pricing engine, schemas, and state store are integer cents (`
 ## 🚀 How to Run Locally
 
 ```bash
-# 1. Navigate to configurator folder
-cd tent-configurator
-
-# 2. Install dependencies
+# 1. Install dependencies
 npm install
 
-# 3. Start development server
+# 2. Start development server
 npm run dev
 # Open http://localhost:3000
 
-# 4. View Shopify Embed Demo
+# 3. View Shopify Embed Demo
 # Open http://localhost:3000/embed-demo.html
 
-# 5. Run test suite
+# 4. Run test suite
 npm test
 
-# 6. Build production bundle
+# 5. Build production bundle
 npm run build
 ```
